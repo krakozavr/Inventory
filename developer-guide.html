@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockProps - Developer Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, monospace;
+            line-height: 1.6; color: #333; background: #f5f5f5; padding: 20px;
+        }
+        .container {
+            max-width: 900px; margin: 0 auto; background: white;
+            padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center; margin-bottom: 40px; padding-bottom: 20px;
+            border-bottom: 3px solid #00897B;
+        }
+        h1 { color: #00897B; font-size: 2.5em; margin-bottom: 10px; }
+        h2 { color: #00695C; margin-top: 40px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #B2DFDB; }
+        h3 { color: #004D40; margin-top: 25px; margin-bottom: 15px; }
+        p, li { margin-bottom: 12px; }
+        ul, ol { margin-left: 25px; margin-bottom: 15px; }
+        .info-box, .warning-box, .success-box {
+            padding: 15px; margin: 20px 0; border-radius: 4px; border-left: 4px solid;
+        }
+        .info-box { background: #E0F2F1; border-color: #00897B; }
+        .warning-box { background: #FFF3E0; border-color: #FF9800; }
+        .success-box { background: #E8F5E9; border-color: #4CAF50; }
+        code { background: #f5f5f5; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; font-size: 0.9em; }
+        pre {
+            background: #263238; color: #aed581; padding: 15px; border-radius: 4px;
+            overflow-x: auto; margin: 15px 0; font-size: 0.9em;
+        }
+        pre code { background: none; color: inherit; padding: 0; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #00897B; color: white; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .status-yes { color: #4CAF50; font-weight: bold; }
+        .status-no { color: #F44336; font-weight: bold; }
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { padding: 20px; }
+            h1 { font-size: 2em; }
+        }
+        footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #666; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛠️ StockProps Developer Guide</h1>
+            <p style="color: #666; font-size: 0.9em;">Creating Compatible HTML Projects</p>
+        </header>
+
+        <h2>Overview</h2>
+        <p>This guide is for developers creating interactive HTML projects for StockProps. If you're a regular user, see the <strong>User Manual</strong> instead.</p>
+
+        <h2>The Blob URL Challenge</h2>
+
+        <p>StockProps loads your HTML in an isolated context called a "blob URL". This is necessary for security and offline functionality, but it creates constraints:</p>
+
+        <div class="warning-box">
+            <strong>⚠ Key Limitation:</strong> Your HTML runs in memory, not from the file system. Relative file paths don't work normally.
+        </div>
+
+        <h3>What This Means</h3>
+        <table>
+            <tr>
+                <th>Pattern</th>
+                <th>Works?</th>
+                <th>Notes</th>
+            </tr>
+            <tr>
+                <td><code>&lt;img src="photo.jpg"&gt;</code></td>
+                <td class="status-yes">✓ Yes</td>
+                <td>Auto-inlined as base64 during import</td>
+            </tr>
+            <tr>
+                <td><code>background-image: url('bg.jpg')</code></td>
+                <td class="status-yes">✓ Yes</td>
+                <td>Auto-inlined as base64</td>
+            </tr>
+            <tr>
+                <td><code>&lt;link href="styles.css"&gt;</code></td>
+                <td class="status-yes">✓ Yes</td>
+                <td>CSS inlined into &lt;style&gt; tag</td>
+            </tr>
+            <tr>
+                <td><code>&lt;script src="app.js"&gt;</code></td>
+                <td class="status-yes">✓ Yes</td>
+                <td>JS inlined into &lt;script&gt; tag</td>
+            </tr>
+            <tr>
+                <td><code>&lt;script src="https://cdn.com/react.js"&gt;</code></td>
+                <td class="status-yes">✓ Yes</td>
+                <td>External CDNs work normally</td>
+            </tr>
+            <tr>
+                <td><code>@font-face { src: url('font.woff2') }</code></td>
+                <td class="status-yes">✓ Yes</td>
+                <td>Fonts auto-inlined as base64</td>
+            </tr>
+            <tr>
+                <td><code>fetch('data.json')</code></td>
+                <td class="status-no">✗ No</td>
+                <td>Local files not accessible</td>
+            </tr>
+            <tr>
+                <td><code>import X from './component.js'</code></td>
+                <td class="status-no">✗ No</td>
+                <td>ES modules between local files fail</td>
+            </tr>
+        </table>
+
+        <h2>Basic Requirements</h2>
+
+        <h3>File Structure</h3>
+        <pre><code>my-project/
+├── index.html          # Entry point (required)
+├── fonts.css           # Auto-inlined (font definitions)
+├── styles.css          # Auto-inlined
+├── script.js           # Auto-inlined
+├── custom-font.woff2   # Auto-inlined as base64
+├── 01.jpg              # Auto-inlined as base64
+├── 02.jpg              # Auto-inlined as base64
+└── logo.png            # Auto-inlined as base64</code></pre>
+
+        <h3>HTML Template Options</h3>
+
+        <p><strong>Option A: Inline Styles/Scripts (Simpler)</strong></p>
+        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;My Project&lt;/title&gt;
+    &lt;style&gt;
+        /* All your CSS here */
+        body { margin: 0; font-family: Arial, sans-serif; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;img src="logo.png"&gt;
+
+    &lt;script&gt;
+        // All your JavaScript here
+        console.log('App loaded');
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <p><strong>Option B: Separate Files (Better Organization)</strong></p>
+        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;My Project&lt;/title&gt;
+
+    &lt;!-- Local CSS - will be auto-inlined --&gt;
+    &lt;link rel="stylesheet" href="styles.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;img src="logo.png"&gt;
+
+    &lt;!-- Local JS - will be auto-inlined --&gt;
+    &lt;script src="app.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <div class="success-box">
+            <strong>✓ Both approaches work!</strong> Separate CSS/JS files are automatically inlined during import.
+        </div>
+
+        <h2>Best Practices</h2>
+
+        <h3>✓ DO</h3>
+        <ul>
+            <li>Use <strong>separate CSS/JS files</strong>: <code>&lt;link href="styles.css"&gt;</code>, <code>&lt;script src="app.js"&gt;</code> (auto-inlined)</li>
+            <li>OR use inline <code>&lt;style&gt;</code> and <code>&lt;script&gt;</code> tags</li>
+            <li>Use <strong>simple relative paths</strong>: <code>src="image.jpg"</code></li>
+            <li>Put all files in <strong>same folder</strong> as HTML</li>
+            <li>Use <strong>external CDNs</strong> for libraries: <code>https://unpkg.com/react</code></li>
+            <li>Embed data in JavaScript arrays instead of JSON files</li>
+            <li>Keep file names simple: <code>01.jpg</code>, <code>logo.png</code></li>
+            <li>Import all files together (HTML + CSS + JS + images)</li>
+            <li>Test by opening HTML directly in browser (should work offline)</li>
+        </ul>
+
+        <h3>✗ DON'T</h3>
+        <ul>
+            <li>Use <code>fetch()</code> or <code>XMLHttpRequest</code> for local files</li>
+            <li>Use ES module imports between local files</li>
+            <li>Use complex folder structures: <code>./assets/images/photo.jpg</code></li>
+            <li>Include spaces or special characters in file names</li>
+            <li>Rely on server-side features (PHP, Node.js, etc.)</li>
+        </ul>
+
+        <h2>Supported Frameworks</h2>
+
+        <h3>✓ React with Babel Standalone</h3>
+        <pre><code>&lt;script src="https://unpkg.com/@babel/standalone/babel.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://unpkg.com/react@18/umd/react.development.js"&gt;&lt;/script&gt;
+&lt;script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"&gt;&lt;/script&gt;
+
+&lt;div id="root"&gt;&lt;/div&gt;
+
+&lt;script type="text/babel"&gt;
+    function App() {
+        return &lt;div&gt;Hello World&lt;/div&gt;;
+    }
+    ReactDOM.render(&lt;App /&gt;, document.getElementById('root'));
+&lt;/script&gt;</code></pre>
+
+        <h3>✓ Tailwind CSS</h3>
+        <pre><code>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;
+
+&lt;div class="bg-gray-900 text-white p-6"&gt;
+    &lt;h1 class="text-3xl font-bold"&gt;Dashboard&lt;/h1&gt;
+&lt;/div&gt;</code></pre>
+
+        <h3>⚠ Multi-File React/TypeScript Projects</h3>
+        <p>For complex projects with separate component files:</p>
+        <ol>
+            <li>Build your project: <code>npm run build</code></li>
+            <li>Import the <code>/dist</code> or <code>/build</code> folder (not source files)</li>
+            <li>The bundled output works perfectly in StockProps</li>
+        </ol>
+
+        <h2>AI Prompt Template</h2>
+
+        <p>Use this prompt with ChatGPT, Claude, or Gemini to generate compatible HTML projects:</p>
+
+        <div class="info-box">
+            <pre style="background: white; color: #333; white-space: pre-wrap;"><strong>System Prompt:</strong>
+
+Create an HTML project for StockProps, a mobile PWA that displays content in fullscreen mode.
+
+<strong>Technical Constraints:</strong>
+- Single HTML file with inline CSS and JavaScript (or separate files that will be auto-inlined)
+- Images must use simple relative paths: src="01.jpg" (NOT src="./images/01.jpg")
+- External libraries MUST use CDN links: https://unpkg.com, https://cdn.jsdelivr.net
+- NO dynamic file loading (fetch/XMLHttpRequest for local files)
+- NO ES module imports between local files
+- Must work when loaded as blob URL in iframe sandbox
+
+<strong>Supported Patterns:</strong>
+✓ &lt;img src="photo.jpg"&gt; (auto-inlined as base64)
+✓ background-image: url('bg.jpg') (auto-inlined)
+✓ &lt;link rel="stylesheet" href="styles.css"&gt; (auto-inlined to &lt;style&gt;)
+✓ &lt;script src="app.js"&gt;&lt;/script&gt; (auto-inlined)
+✓ @font-face { src: url('font.woff2') } (auto-inlined)
+✓ Custom fonts: WOFF, WOFF2, TTF, EOT, OTF
+✓ Inline &lt;style&gt; and &lt;script&gt; tags
+✓ &lt;script src="https://unpkg.com/react"&gt; (CDN)
+✓ &lt;script src="tailwind.js"&gt; (local Tailwind file)
+✓ Single-file React with Babel standalone
+✓ Data embedded in JavaScript (not separate JSON)
+
+<strong>Unsupported Patterns:</strong>
+✗ fetch('local-file.json')
+✗ import X from './component.js'
+✗ Complex folder paths
+✗ Dynamic script loading from local files
+
+<strong>Mobile Optimization:</strong>
+- Viewport meta tag: &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+- Touch-friendly (large tap targets, swipe gestures)
+- Mobile-first responsive design
+- Interactive elements should NOT interfere with triple-tap exit gesture on edges
+
+<strong>Output:</strong>
+Complete, self-contained HTML that displays correctly on mobile devices in fullscreen.</pre>
+        </div>
+
+        <h2>Code Examples</h2>
+
+        <h3>Example 1: Image Carousel</h3>
+        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;style&gt;
+        body {
+            margin: 0; background: #000; color: #fff;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            height: 100vh; font-family: Arial;
+        }
+        img { max-width: 90%; max-height: 80vh; margin-bottom: 20px; }
+        button { padding: 15px 30px; font-size: 18px; margin: 0 10px; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;img id="viewer" src="01.jpg"&gt;
+    &lt;div&gt;
+        &lt;button onclick="prev()"&gt;← Previous&lt;/button&gt;
+        &lt;button onclick="next()"&gt;Next →&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;script&gt;
+        const images = ['01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg'];
+        let index = 0;
+
+        function updateImage() {
+            document.getElementById('viewer').src = images[index];
+        }
+
+        function next() {
+            index = (index + 1) % images.length;
+            updateImage();
+        }
+
+        function prev() {
+            index = (index - 1 + images.length) % images.length;
+            updateImage();
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <h3>Example 2: Dashboard with Tailwind</h3>
+        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body class="bg-gray-900 text-white p-6"&gt;
+    &lt;div class="max-w-4xl mx-auto"&gt;
+        &lt;h1 class="text-4xl font-bold mb-8"&gt;Financial Dashboard&lt;/h1&gt;
+        &lt;div id="stats" class="grid grid-cols-2 gap-6"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;script&gt;
+        const data = [
+            { label: 'Revenue', value: '$124,500', change: '+12%' },
+            { label: 'Expenses', value: '$48,200', change: '-5%' },
+            { label: 'Profit', value: '$76,300', change: '+18%' },
+            { label: 'Customers', value: '2,451', change: '+8%' }
+        ];
+
+        document.getElementById('stats').innerHTML = data.map(s =&gt; `
+            &lt;div class="bg-gray-800 p-6 rounded-lg"&gt;
+                &lt;div class="text-3xl font-bold mb-2"&gt;${s.value}&lt;/div&gt;
+                &lt;div class="text-gray-400"&gt;${s.label}&lt;/div&gt;
+                &lt;div class="text-green-400 text-sm mt-2"&gt;${s.change}&lt;/div&gt;
+            &lt;/div&gt;
+        `).join('');
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <h2>Testing Your Project</h2>
+
+        <ol>
+            <li><strong>Local test:</strong> Open HTML file directly in browser
+                <ul>
+                    <li>Should work offline</li>
+                    <li>Images should load</li>
+                    <li>Interactions should work</li>
+                </ul>
+            </li>
+            <li><strong>Mobile test:</strong> Copy folder to phone, import to StockProps
+                <ul>
+                    <li>Check fullscreen display</li>
+                    <li>Verify triple-tap exit works (use edge zones)</li>
+                    <li>Test on actual device screen size</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h2>Common Issues</h2>
+
+        <h3>Images Don't Display</h3>
+        <p><strong>Cause:</strong> Complex paths or wrong folder structure</p>
+        <p><strong>Fix:</strong> Use simple paths (<code>src="image.jpg"</code>), put images in same folder as HTML</p>
+
+        <h3>CSS Not Loading</h3>
+        <p><strong>Cause:</strong> Trying to load CSS dynamically via JavaScript, or wrong file path</p>
+        <p><strong>Fix:</strong> Use <code>&lt;link rel="stylesheet" href="styles.css"&gt;</code> in HTML (will be auto-inlined), or inline <code>&lt;style&gt;</code> tags. Don't use complex paths like <code>./assets/css/style.css</code> - keep files in the same folder as HTML.</p>
+
+        <h3>JavaScript Errors</h3>
+        <p><strong>Cause:</strong> Trying to fetch local files or use ES modules</p>
+        <p><strong>Fix:</strong> Embed data in JavaScript, avoid fetch() for local resources</p>
+
+        <h2>Supported Media Formats</h2>
+
+        <table>
+            <tr>
+                <th>Type</th>
+                <th>Formats</th>
+                <th>Auto-Inlined?</th>
+            </tr>
+            <tr>
+                <td>Images</td>
+                <td>PNG, JPG, JPEG, GIF, SVG, WebP, BMP, ICO</td>
+                <td class="status-yes">✓ Yes</td>
+            </tr>
+            <tr>
+                <td>Styles</td>
+                <td>CSS</td>
+                <td class="status-yes">✓ Yes</td>
+            </tr>
+            <tr>
+                <td>Scripts</td>
+                <td>JS, MJS</td>
+                <td class="status-yes">✓ Yes</td>
+            </tr>
+            <tr>
+                <td>Video</td>
+                <td>MP4, WebM, MOV, AVI, M4V</td>
+                <td class="status-no">✗ No</td>
+            </tr>
+            <tr>
+                <td>Fonts</td>
+                <td>WOFF, WOFF2, TTF, OTF, EOT</td>
+                <td class="status-no">✗ No</td>
+            </tr>
+        </table>
+
+        <h2>Advanced: Using React</h2>
+
+        <p>For single-file React apps, use Babel standalone:</p>
+
+        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;script src="https://unpkg.com/@babel/standalone/babel.min.js"&gt;&lt;/script&gt;
+    &lt;script src="https://unpkg.com/react@18/umd/react.development.js"&gt;&lt;/script&gt;
+    &lt;script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"&gt;&lt;/script&gt;
+    &lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="root"&gt;&lt;/div&gt;
+    &lt;script type="text/babel"&gt;
+        function App() {
+            const [count, setCount] = React.useState(0);
+
+            return (
+                &lt;div className="p-8 bg-gray-900 min-h-screen text-white"&gt;
+                    &lt;h1 className="text-3xl mb-4"&gt;Counter: {count}&lt;/h1&gt;
+                    &lt;button
+                        onClick={() =&gt; setCount(count + 1)}
+                        className="bg-blue-500 px-6 py-3 rounded"
+                    &gt;
+                        Increment
+                    &lt;/button&gt;
+                &lt;/div&gt;
+            );
+        }
+
+        ReactDOM.render(&lt;App /&gt;, document.getElementById('root'));
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <footer>
+            <p><strong>StockProps v1.0.70</strong></p>
+            <p>For basic usage instructions, see: <strong>User Manual</strong></p>
+            <p style="margin-top: 10px;">
+                <a href="https://github.com/krakozavr/StockPropsApp" target="_blank" style="color: #00897B;">GitHub Repository</a> |
+                <a href="https://github.com/krakozavr/StockPropsApp/issues" target="_blank" style="color: #00897B;">Report Issues</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
