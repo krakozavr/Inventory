@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Manager</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Local CSS - will be auto-inlined -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Initialization Screen -->
+    <div id="init-screen" class="screen active">
+        <div class="screen-container">
+            <div class="init-content">
+                <h1 class="init-title">Inventory Manager</h1>
+                <p class="init-subtitle">Setup Your Store</p>
+
+                <div class="form-group">
+                    <label for="store-name">Store/Business Name</label>
+                    <input
+                        type="text"
+                        id="store-name"
+                        placeholder="Enter your business name"
+                        class="text-input"
+                    >
+                </div>
+
+                <div class="color-pickers">
+                    <div class="color-group">
+                        <label for="primary-color">Primary Branding Color</label>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="primary-color" value="#2563eb">
+                            <span id="primary-hex">#2563eb</span>
+                        </div>
+                    </div>
+
+                    <div class="color-group">
+                        <label for="accent-color">Accent Color</label>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="accent-color" value="#7c3aed">
+                            <span id="accent-hex">#7c3aed</span>
+                        </div>
+                    </div>
+
+                    <div class="color-group">
+                        <label for="background-color">Background Color</label>
+                        <div class="color-input-wrapper">
+                            <input type="color" id="background-color" value="#f8fafc">
+                            <span id="background-hex">#f8fafc</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="continue-btn" class="primary-btn">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading/Authorization Screen -->
+    <div id="loading-screen" class="screen">
+        <div class="screen-container">
+            <div class="loading-content">
+                <div class="loading-icon">
+                    <div class="spinner"></div>
+                </div>
+                <h2 class="loading-title" id="store-name-display">Store Name</h2>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <p class="progress-text" id="progress-text">Initializing...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Screen -->
+    <div id="main-screen" class="screen">
+        <!-- Header -->
+        <header class="app-header">
+            <button id="back-btn" class="back-btn">←</button>
+            <h1 id="header-title">Dashboard</h1>
+            <div class="header-spacer"></div>
+        </header>
+
+        <!-- Dashboard/Landing Page -->
+        <div id="dashboard-view" class="view active">
+            <div class="dashboard-header">
+                <h2 id="dashboard-store-name">Store Name</h2>
+                <p class="dashboard-subtitle">Inventory Management System</p>
+            </div>
+
+            <div class="category-grid">
+                <div class="category-card" data-category="clothes">
+                    <div class="category-icon">👔</div>
+                    <h3>Clothes</h3>
+                    <p class="category-count" id="clothes-count">0 items</p>
+                </div>
+
+                <div class="category-card" data-category="shoes">
+                    <div class="category-icon">👟</div>
+                    <h3>Shoes</h3>
+                    <p class="category-count" id="shoes-count">0 items</p>
+                </div>
+
+                <div class="category-card" data-category="accessories">
+                    <div class="category-icon">👜</div>
+                    <h3>Accessories</h3>
+                    <p class="category-count" id="accessories-count">0 items</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subcategories View -->
+        <div id="subcategories-view" class="view">
+            <div class="subcategory-list" id="subcategory-list">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Products View -->
+        <div id="products-view" class="view">
+            <div class="products-header">
+                <div class="view-toggle">
+                    <button class="toggle-btn active" data-view="grid">Grid</button>
+                    <button class="toggle-btn" data-view="list">List</button>
+                </div>
+            </div>
+            <div class="products-grid" id="products-grid">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Detail Modal -->
+    <div id="product-modal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close">×</button>
+            <div class="modal-body" id="modal-body">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Local JavaScript files - will be auto-inlined -->
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
