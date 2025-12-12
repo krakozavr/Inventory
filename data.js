@@ -81,7 +81,8 @@ const menClothingSubcategories = [
             'Classic Dress Shirt', 'Slim Fit Dress Shirt', 'Regular Fit Dress Shirt',
             'Non-Iron Dress Shirt', 'Performance Dress Shirt', 'Stretch Dress Shirt',
             'French Cuff Dress Shirt', 'Button Down Dress Shirt', 'Point Collar Dress Shirt',
-            'Spread Collar Dress Shirt'
+            'Spread Collar Dress Shirt', 'Athletic Fit Dress Shirt', 'Extra Slim Dress Shirt',
+            'Comfort Fit Dress Shirt', 'Modern Fit Dress Shirt', 'Easy Care Dress Shirt'
         ],
         sizes: SIZES.menShirts,
         colors: ['White', 'Light Blue', 'Navy', 'Black', 'Gray', 'Pink'],
@@ -649,6 +650,48 @@ accessoriesSubcategories.forEach((subcat, subcatIndex) => {
         }));
     });
 });
+
+// Add more variants to reach target counts
+// For each main category, duplicate some items with variants to reach 100+ items
+
+const VARIANT_MODIFIERS = ['Premium', 'Deluxe', 'Essential', 'Signature', 'Heritage'];
+const FIT_MODIFIERS = ['Tailored', 'Relaxed', 'Modern', 'Classic', 'Contemporary'];
+
+function addVariants(category, targetCount) {
+    const currentItems = INVENTORY_DATABASE.filter(item => item.category === category);
+    const needed = targetCount - currentItems.length;
+
+    if (needed <= 0) return;
+
+    const modifiers = [...VARIANT_MODIFIERS, ...FIT_MODIFIERS];
+    let variantIndex = 0;
+
+    for (let i = 0; i < needed; i++) {
+        const sourceItem = currentItems[i % currentItems.length];
+        const modifier = modifiers[variantIndex % modifiers.length];
+        variantIndex++;
+
+        const newSku = sourceItem.sku.replace(/(\d{3})$/, (match) => {
+            const num = parseInt(match) + 500 + i;
+            return String(num).padStart(3, '0');
+        });
+
+        INVENTORY_DATABASE.push({
+            ...sourceItem,
+            sku: newSku,
+            name: `${modifier} ${sourceItem.name}`,
+            ...generateStock(),
+            ...generatePrice(sourceItem.wholesale)
+        });
+    }
+}
+
+// Add variants to reach 100+ items per category
+addVariants("Men's Clothing", 120);
+addVariants("Women's Clothing", 120);
+addVariants("Men's Shoes", 105);
+addVariants("Women's Shoes", 105);
+addVariants("Accessories", 120);
 
 // Export for use in app
 console.log(`Generated ${INVENTORY_DATABASE.length} SKUs`);

@@ -22,41 +22,74 @@ const App = {
     }
 };
 
+// ===== LOCAL STORAGE =====
+function loadSettings() {
+    const saved = localStorage.getItem('inventorySettings');
+    if (saved) {
+        try {
+            const settings = JSON.parse(saved);
+            return settings;
+        } catch (e) {
+            console.error('Error loading settings:', e);
+        }
+    }
+    return null;
+}
+
+function saveSettings() {
+    const settings = {
+        storeName: App.storeName,
+        theme: App.theme
+    };
+    localStorage.setItem('inventorySettings', JSON.stringify(settings));
+}
+
 // ===== INITIALIZATION SCREEN =====
+let bgColorPicker, textColorPicker, accentColorPicker;
+
 function initializeSetup() {
     const storeNameInput = document.getElementById('store-name');
-    const bgColorPicker = document.getElementById('bg-color');
-    const textColorPicker = document.getElementById('text-color');
-    const accentColorPicker = document.getElementById('accent-color');
-    const bgHexInput = document.getElementById('bg-hex');
-    const textHexInput = document.getElementById('text-hex');
-    const accentHexInput = document.getElementById('accent-hex');
     const submitBtn = document.getElementById('init-submit');
 
-    // Sync color picker with hex input
-    function syncColorPicker(picker, hexInput) {
-        picker.addEventListener('input', (e) => {
-            hexInput.value = e.target.value.toUpperCase();
-        });
+    // Load saved settings
+    const savedSettings = loadSettings();
+    const defaultBg = savedSettings?.theme?.bg || '#0a0e14';
+    const defaultText = savedSettings?.theme?.text || '#c7cdd8';
+    const defaultAccent = savedSettings?.theme?.accent || '#39bae6';
 
-        hexInput.addEventListener('input', (e) => {
-            const hex = e.target.value;
-            if (/^#[0-9A-F]{6}$/i.test(hex)) {
-                picker.value = hex;
-            }
-        });
-
-        // Validate hex input on blur
-        hexInput.addEventListener('blur', (e) => {
-            if (!/^#[0-9A-F]{6}$/i.test(e.target.value)) {
-                e.target.value = picker.value;
-            }
-        });
+    if (savedSettings?.storeName) {
+        storeNameInput.value = savedSettings.storeName;
     }
 
-    syncColorPicker(bgColorPicker, bgHexInput);
-    syncColorPicker(textColorPicker, textHexInput);
-    syncColorPicker(accentColorPicker, accentHexInput);
+    // Initialize ColorPickers
+    bgColorPicker = new ColorPicker(document.getElementById('bg-color-picker'), {
+        initialColor: defaultBg,
+        showHexDisplay: true,
+        onChange: (hex) => {
+            App.theme.bg = hex;
+        }
+    });
+
+    textColorPicker = new ColorPicker(document.getElementById('text-color-picker'), {
+        initialColor: defaultText,
+        showHexDisplay: true,
+        onChange: (hex) => {
+            App.theme.text = hex;
+        }
+    });
+
+    accentColorPicker = new ColorPicker(document.getElementById('accent-color-picker'), {
+        initialColor: defaultAccent,
+        showHexDisplay: true,
+        onChange: (hex) => {
+            App.theme.accent = hex;
+        }
+    });
+
+    // Set initial theme values
+    App.theme.bg = bgColorPicker.getValue();
+    App.theme.text = textColorPicker.getValue();
+    App.theme.accent = accentColorPicker.getValue();
 
     submitBtn.addEventListener('click', () => {
         const storeName = storeNameInput.value.trim();
@@ -68,10 +101,11 @@ function initializeSetup() {
         }
 
         App.storeName = storeName;
-        App.theme.bg = bgColorPicker.value;
-        App.theme.text = textColorPicker.value;
-        App.theme.accent = accentColorPicker.value;
+        App.theme.bg = bgColorPicker.getValue();
+        App.theme.text = textColorPicker.getValue();
+        App.theme.accent = accentColorPicker.getValue();
 
+        saveSettings();
         startLoadingSequence();
     });
 
