@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory Management System</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="ColorPicker.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -24,28 +25,20 @@
 
                 <div class="color-section">
                     <h3>TERMINAL COLOR SCHEME</h3>
-                    <div class="color-grid">
-                        <div class="color-field">
-                            <label>Background:</label>
-                            <div class="color-row">
-                                <input type="color" id="bg-color" value="#0a0e14">
-                                <input type="text" id="bg-hex" value="#0a0e14" class="hex-input">
-                            </div>
-                        </div>
-                        <div class="color-field">
-                            <label>Primary Text:</label>
-                            <div class="color-row">
-                                <input type="color" id="text-color" value="#c7cdd8">
-                                <input type="text" id="text-hex" value="#c7cdd8" class="hex-input">
-                            </div>
-                        </div>
-                        <div class="color-field">
-                            <label>Accent:</label>
-                            <div class="color-row">
-                                <input type="color" id="accent-color" value="#39bae6">
-                                <input type="text" id="accent-hex" value="#39bae6" class="hex-input">
-                            </div>
-                        </div>
+
+                    <div class="color-picker-wrapper">
+                        <label>Background Color:</label>
+                        <div id="bg-color-picker"></div>
+                    </div>
+
+                    <div class="color-picker-wrapper">
+                        <label>Text Color:</label>
+                        <div id="text-color-picker"></div>
+                    </div>
+
+                    <div class="color-picker-wrapper">
+                        <label>Accent Color:</label>
+                        <div id="accent-color-picker"></div>
                     </div>
                 </div>
 
@@ -170,7 +163,8 @@
         </div>
     </div>
 
-    <!-- Data and App Scripts -->
+    <!-- Scripts -->
+    <script src="ColorPicker.js"></script>
     <script src="data.js"></script>
     <script src="app.js"></script>
 </body>
