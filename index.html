@@ -3,151 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Manager</title>
-
-    <!-- Tailwind CSS CDN -->
+    <title>Inventory Management System</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Local CSS - will be auto-inlined -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <!-- Initialization Screen -->
     <div id="init-screen" class="screen active">
-        <div class="screen-container">
-            <div class="init-content">
-                <h1 class="init-title">Inventory Manager</h1>
-                <p class="init-subtitle">Setup Your Store</p>
+        <div class="init-container">
+            <div class="init-header">
+                <h1>INVENTORY MANAGEMENT SYSTEM</h1>
+                <p>Version 2.4.1 | Database Console</p>
+            </div>
 
-                <div class="form-group">
-                    <label for="store-name">Store/Business Name</label>
-                    <input
-                        type="text"
-                        id="store-name"
-                        placeholder="Enter your business name"
-                        class="text-input"
-                    >
+            <div class="init-form">
+                <div class="form-field">
+                    <label>STORE/BUSINESS NAME:</label>
+                    <input type="text" id="store-name" placeholder="Enter business name" autocomplete="off">
                 </div>
 
-                <div class="color-pickers">
-                    <div class="color-group">
-                        <label for="primary-color">Primary Branding Color</label>
-                        <div class="color-input-wrapper">
-                            <input type="color" id="primary-color" value="#2563eb">
-                            <span id="primary-hex">#2563eb</span>
+                <div class="color-section">
+                    <h3>TERMINAL COLOR SCHEME</h3>
+                    <div class="color-grid">
+                        <div class="color-field">
+                            <label>Background:</label>
+                            <div class="color-row">
+                                <input type="color" id="bg-color" value="#0a0e14">
+                                <input type="text" id="bg-hex" value="#0a0e14" class="hex-input">
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="color-group">
-                        <label for="accent-color">Accent Color</label>
-                        <div class="color-input-wrapper">
-                            <input type="color" id="accent-color" value="#7c3aed">
-                            <span id="accent-hex">#7c3aed</span>
+                        <div class="color-field">
+                            <label>Primary Text:</label>
+                            <div class="color-row">
+                                <input type="color" id="text-color" value="#c7cdd8">
+                                <input type="text" id="text-hex" value="#c7cdd8" class="hex-input">
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="color-group">
-                        <label for="background-color">Background Color</label>
-                        <div class="color-input-wrapper">
-                            <input type="color" id="background-color" value="#f8fafc">
-                            <span id="background-hex">#f8fafc</span>
+                        <div class="color-field">
+                            <label>Accent:</label>
+                            <div class="color-row">
+                                <input type="color" id="accent-color" value="#39bae6">
+                                <input type="text" id="accent-hex" value="#39bae6" class="hex-input">
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <button id="continue-btn" class="primary-btn">Continue</button>
+                <button id="init-submit" class="submit-btn">INITIALIZE SYSTEM</button>
             </div>
         </div>
     </div>
 
-    <!-- Loading/Authorization Screen -->
+    <!-- Loading Screen -->
     <div id="loading-screen" class="screen">
-        <div class="screen-container">
-            <div class="loading-content">
-                <div class="loading-icon">
-                    <div class="spinner"></div>
+        <div class="loading-container">
+            <div class="loading-header">
+                <span id="loading-store-name">STORE NAME</span>
+                <span class="loading-subtitle">INVENTORY MANAGEMENT SYSTEM</span>
+            </div>
+            <div class="loading-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
                 </div>
-                <h2 class="loading-title" id="store-name-display">Store Name</h2>
-                <div class="progress-container">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progress-fill"></div>
-                    </div>
-                    <p class="progress-text" id="progress-text">Initializing...</p>
+                <div class="progress-info">
+                    <span id="progress-text">Initializing database connection...</span>
+                    <span id="progress-percent">0%</span>
                 </div>
             </div>
+            <div class="loading-log" id="loading-log"></div>
         </div>
     </div>
 
-    <!-- Main App Screen -->
+    <!-- Main Application -->
     <div id="main-screen" class="screen">
-        <!-- Header -->
-        <header class="app-header">
-            <button id="back-btn" class="back-btn">←</button>
-            <h1 id="header-title">Dashboard</h1>
-            <div class="header-spacer"></div>
-        </header>
-
-        <!-- Dashboard/Landing Page -->
-        <div id="dashboard-view" class="view active">
-            <div class="dashboard-header">
-                <h2 id="dashboard-store-name">Store Name</h2>
-                <p class="dashboard-subtitle">Inventory Management System</p>
+        <!-- Header Bar -->
+        <div class="app-header">
+            <div class="header-left">
+                <h1 id="header-store-name">STORE NAME</h1>
+                <span class="header-subtitle">INVENTORY MANAGEMENT SYSTEM v2.4.1</span>
             </div>
-
-            <div class="category-grid">
-                <div class="category-card" data-category="clothes">
-                    <div class="category-icon">👔</div>
-                    <h3>Clothes</h3>
-                    <p class="category-count" id="clothes-count">0 items</p>
-                </div>
-
-                <div class="category-card" data-category="shoes">
-                    <div class="category-icon">👟</div>
-                    <h3>Shoes</h3>
-                    <p class="category-count" id="shoes-count">0 items</p>
-                </div>
-
-                <div class="category-card" data-category="accessories">
-                    <div class="category-icon">👜</div>
-                    <h3>Accessories</h3>
-                    <p class="category-count" id="accessories-count">0 items</p>
-                </div>
+            <div class="header-right">
+                <span class="header-stat">TOTAL SKUs: <strong id="total-skus">0</strong></span>
+                <span class="header-stat">LOW STOCK: <strong id="low-stock-count">0</strong></span>
+                <button id="view-toggle" class="view-toggle-btn">TABLE VIEW</button>
             </div>
         </div>
 
-        <!-- Subcategories View -->
-        <div id="subcategories-view" class="view">
-            <div class="subcategory-list" id="subcategory-list">
-                <!-- Populated by JavaScript -->
+        <!-- Control Bar -->
+        <div class="control-bar">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search: SKU, Name, Category..." autocomplete="off">
+                <button id="clear-search" class="clear-btn">×</button>
+            </div>
+
+            <div class="filter-group">
+                <select id="filter-category" class="filter-select">
+                    <option value="">All Categories</option>
+                </select>
+                <select id="filter-subcategory" class="filter-select">
+                    <option value="">All Subcategories</option>
+                </select>
+                <select id="filter-gender" class="filter-select">
+                    <option value="">All Genders</option>
+                    <option value="M">Men's</option>
+                    <option value="W">Women's</option>
+                    <option value="U">Unisex</option>
+                </select>
+                <select id="filter-stock" class="filter-select">
+                    <option value="">All Stock Levels</option>
+                    <option value="in-stock">In Stock</option>
+                    <option value="low">Low Stock</option>
+                    <option value="out">Out of Stock</option>
+                </select>
+                <button id="reset-filters" class="reset-btn">Reset Filters</button>
             </div>
         </div>
 
-        <!-- Products View -->
-        <div id="products-view" class="view">
-            <div class="products-header">
-                <div class="view-toggle">
-                    <button class="toggle-btn active" data-view="grid">Grid</button>
-                    <button class="toggle-btn" data-view="list">List</button>
-                </div>
+        <!-- Results Info Bar -->
+        <div class="results-bar">
+            <span>Showing <strong id="showing-count">0</strong> of <strong id="total-count">0</strong> items</span>
+            <div class="pagination-controls">
+                <button id="prev-page" class="page-btn">◀ Prev</button>
+                <span>Page <input type="number" id="page-input" value="1" min="1"> of <span id="total-pages">1</span></span>
+                <button id="next-page" class="page-btn">Next ▶</button>
+                <select id="items-per-page" class="page-select">
+                    <option value="25">25/page</option>
+                    <option value="50" selected>50/page</option>
+                    <option value="100">100/page</option>
+                    <option value="200">200/page</option>
+                </select>
             </div>
-            <div class="products-grid" id="products-grid">
+        </div>
+
+        <!-- Data Table -->
+        <div class="table-container">
+            <table class="data-table" id="inventory-table">
+                <thead>
+                    <tr>
+                        <th class="sortable" data-sort="sku">SKU <span class="sort-indicator"></span></th>
+                        <th class="sortable" data-sort="name">PRODUCT NAME <span class="sort-indicator"></span></th>
+                        <th class="sortable" data-sort="category">CATEGORY <span class="sort-indicator"></span></th>
+                        <th class="sortable" data-sort="subcategory">SUBCATEGORY <span class="sort-indicator"></span></th>
+                        <th class="sortable numeric" data-sort="total">TOTAL <span class="sort-indicator"></span></th>
+                        <th class="sortable numeric" data-sort="available">AVAIL <span class="sort-indicator"></span></th>
+                        <th class="sortable numeric" data-sort="hold">HOLD <span class="sort-indicator"></span></th>
+                        <th class="sortable numeric" data-sort="sold">SOLD <span class="sort-indicator"></span></th>
+                        <th class="sortable numeric" data-sort="requested">REQ <span class="sort-indicator"></span></th>
+                        <th class="sortable numeric" data-sort="price">RETAIL <span class="sort-indicator"></span></th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Detail Panel (slides in from right) -->
+        <div id="detail-panel" class="detail-panel">
+            <div class="detail-header">
+                <h2>ITEM DETAILS</h2>
+                <button id="close-detail" class="close-btn">×</button>
+            </div>
+            <div class="detail-content" id="detail-content">
                 <!-- Populated by JavaScript -->
             </div>
         </div>
     </div>
 
-    <!-- Product Detail Modal -->
-    <div id="product-modal" class="modal">
-        <div class="modal-overlay"></div>
-        <div class="modal-content">
-            <button class="modal-close">×</button>
-            <div class="modal-body" id="modal-body">
-                <!-- Populated by JavaScript -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Local JavaScript files - will be auto-inlined -->
+    <!-- Data and App Scripts -->
     <script src="data.js"></script>
     <script src="app.js"></script>
 </body>
