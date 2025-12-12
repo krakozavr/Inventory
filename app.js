@@ -1,59 +1,573 @@
-// Main Application State
-const AppState = {
+// Business Inventory Management System - Application Logic
+
+// ===== APPLICATION STATE =====
+const App = {
     storeName: '',
-    primaryColor: '#2563eb',
-    accentColor: '#7c3aed',
-    backgroundColor: '#f8fafc',
-    currentCategory: null,
-    currentSubcategory: null,
-    navigationHistory: []
+    theme: {
+        bg: '#0a0e14',
+        text: '#c7cdd8',
+        accent: '#39bae6'
+    },
+    filteredData: [],
+    currentPage: 1,
+    itemsPerPage: 50,
+    sortColumn: 'sku',
+    sortDirection: 'asc',
+    filters: {
+        search: '',
+        category: '',
+        subcategory: '',
+        gender: '',
+        stock: ''
+    }
 };
 
-// Utility Functions
-function hexToRgb(hex) {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null;
+// ===== INITIALIZATION SCREEN =====
+function initializeSetup() {
+    const storeNameInput = document.getElementById('store-name');
+    const bgColorPicker = document.getElementById('bg-color');
+    const textColorPicker = document.getElementById('text-color');
+    const accentColorPicker = document.getElementById('accent-color');
+    const bgHexInput = document.getElementById('bg-hex');
+    const textHexInput = document.getElementById('text-hex');
+    const accentHexInput = document.getElementById('accent-hex');
+    const submitBtn = document.getElementById('init-submit');
+
+    // Sync color picker with hex input
+    function syncColorPicker(picker, hexInput) {
+        picker.addEventListener('input', (e) => {
+            hexInput.value = e.target.value.toUpperCase();
+        });
+
+        hexInput.addEventListener('input', (e) => {
+            const hex = e.target.value;
+            if (/^#[0-9A-F]{6}$/i.test(hex)) {
+                picker.value = hex;
+            }
+        });
+
+        // Validate hex input on blur
+        hexInput.addEventListener('blur', (e) => {
+            if (!/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+                e.target.value = picker.value;
+            }
+        });
+    }
+
+    syncColorPicker(bgColorPicker, bgHexInput);
+    syncColorPicker(textColorPicker, textHexInput);
+    syncColorPicker(accentColorPicker, accentHexInput);
+
+    submitBtn.addEventListener('click', () => {
+        const storeName = storeNameInput.value.trim();
+
+        if (!storeName) {
+            alert('Please enter a store name');
+            storeNameInput.focus();
+            return;
+        }
+
+        App.storeName = storeName;
+        App.theme.bg = bgColorPicker.value;
+        App.theme.text = textColorPicker.value;
+        App.theme.accent = accentColorPicker.value;
+
+        startLoadingSequence();
+    });
+
+    storeNameInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            submitBtn.click();
+        }
+    });
 }
 
-function lighten(hex, percent) {
-    const rgb = hexToRgb(hex);
-    const factor = percent / 100;
-    return `#${[rgb.r, rgb.g, rgb.b].map(c => {
-        const lightened = Math.round(c + (255 - c) * factor);
-        return lightened.toString(16).padStart(2, '0');
-    }).join('')}`;
+// ===== LOADING SCREEN =====
+function startLoadingSequence() {
+    showScreen('loading-screen');
+    document.getElementById('loading-store-name').textContent = App.storeName.toUpperCase();
+
+    const progressFill = document.getElementById('progress-fill');
+    const progressText = document.getElementById('progress-text');
+    const progressPercent = document.getElementById('progress-percent');
+    const loadingLog = document.getElementById('loading-log');
+
+    const steps = [
+        { percent: 10, text: 'Initializing database connection...', log: '[OK] Database connection established' },
+        { percent: 25, text: 'Authenticating credentials...', log: '[OK] Authentication successful' },
+        { percent: 40, text: 'Loading inventory database...', log: '[OK] Loaded ' + INVENTORY_DATABASE.length + ' SKUs' },
+        { percent: 55, text: 'Indexing product categories...', log: '[OK] Indexed 5 main categories' },
+        { percent: 70, text: 'Building search index...', log: '[OK] Search index ready' },
+        { percent: 85, text: 'Applying color scheme...', log: '[OK] Theme applied' },
+        { percent: 100, text: 'System ready', log: '[OK] System initialized successfully' }
+    ];
+
+    let currentStep = 0;
+
+    function executeStep() {
+        if (currentStep < steps.length) {
+            const step = steps[currentStep];
+            progressFill.style.width = step.percent + '%';
+            progressText.textContent = step.text;
+            progressPercent.textContent = step.percent + '%';
+
+            if (step.log) {
+                const logEntry = document.createElement('div');
+                logEntry.className = 'log-entry success';
+                logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${step.log}`;
+                loadingLog.appendChild(logEntry);
+                loadingLog.scrollTop = loadingLog.scrollHeight;
+            }
+
+            currentStep++;
+            setTimeout(executeStep, 400 + Math.random() * 300);
+        } else {
+            setTimeout(() => {
+                applyTheme();
+                initializeApp();
+                showScreen('main-screen');
+            }, 500);
+        }
+    }
+
+    executeStep();
 }
 
-function darken(hex, percent) {
-    const rgb = hexToRgb(hex);
-    const factor = percent / 100;
-    return `#${[rgb.r, rgb.g, rgb.b].map(c => {
-        const darkened = Math.round(c * (1 - factor));
-        return darkened.toString(16).padStart(2, '0');
-    }).join('')}`;
-}
-
-function applyColorTheme() {
+// ===== THEME APPLICATION =====
+function applyTheme() {
     const root = document.documentElement;
+    root.style.setProperty('--bg-color', App.theme.bg);
+    root.style.setProperty('--text-color', App.theme.text);
+    root.style.setProperty('--accent-color', App.theme.accent);
 
-    root.style.setProperty('--primary-color', AppState.primaryColor);
-    root.style.setProperty('--primary-light', lighten(AppState.primaryColor, 10));
-    root.style.setProperty('--primary-dark', darken(AppState.primaryColor, 15));
+    // Generate lighter/darker variants
+    const bgLighter = adjustColor(App.theme.bg, 20);
+    const bgLightest = adjustColor(App.theme.bg, 40);
+    const textDim = adjustColor(App.theme.text, -30);
 
-    root.style.setProperty('--accent-color', AppState.accentColor);
-    root.style.setProperty('--accent-light', lighten(AppState.accentColor, 10));
-    root.style.setProperty('--accent-dark', darken(AppState.accentColor, 15));
-
-    root.style.setProperty('--background-color', AppState.backgroundColor);
-    root.style.setProperty('--background-light', lighten(AppState.backgroundColor, 5));
-    root.style.setProperty('--background-dark', darken(AppState.backgroundColor, 10));
+    root.style.setProperty('--bg-light', bgLighter);
+    root.style.setProperty('--bg-lighter', bgLightest);
+    root.style.setProperty('--text-dim', textDim);
 }
 
-// Screen Navigation
+function adjustColor(hex, percent) {
+    const num = parseInt(hex.replace('#', ''), 16);
+    const r = Math.min(255, Math.max(0, (num >> 16) + percent));
+    const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + percent));
+    const b = Math.min(255, Math.max(0, (num & 0x0000FF) + percent));
+    return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+}
+
+// ===== MAIN APPLICATION =====
+function initializeApp() {
+    document.getElementById('header-store-name').textContent = App.storeName.toUpperCase();
+
+    App.filteredData = [...INVENTORY_DATABASE];
+    populateFilterDropdowns();
+    updateDisplay();
+    setupEventListeners();
+}
+
+function populateFilterDropdowns() {
+    const categories = [...new Set(INVENTORY_DATABASE.map(item => item.category))].sort();
+    const categorySelect = document.getElementById('filter-category');
+
+    categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = cat;
+        categorySelect.appendChild(option);
+    });
+}
+
+function updateSubcategoryFilter() {
+    const subcategorySelect = document.getElementById('filter-subcategory');
+    const selectedCategory = App.filters.category;
+
+    // Clear current options except first
+    subcategorySelect.innerHTML = '<option value="">All Subcategories</option>';
+
+    if (selectedCategory) {
+        const subcategories = [...new Set(
+            INVENTORY_DATABASE
+                .filter(item => item.category === selectedCategory)
+                .map(item => item.subcategory)
+        )].sort();
+
+        subcategories.forEach(subcat => {
+            const option = document.createElement('option');
+            option.value = subcat;
+            option.textContent = subcat;
+            subcategorySelect.appendChild(option);
+        });
+    }
+}
+
+// ===== FILTERING & SEARCHING =====
+function applyFilters() {
+    let data = [...INVENTORY_DATABASE];
+
+    // Search filter
+    if (App.filters.search) {
+        const search = App.filters.search.toLowerCase();
+        data = data.filter(item =>
+            item.sku.toLowerCase().includes(search) ||
+            item.name.toLowerCase().includes(search) ||
+            item.category.toLowerCase().includes(search) ||
+            item.subcategory.toLowerCase().includes(search) ||
+            item.manufacturer.toLowerCase().includes(search) ||
+            item.colors.toLowerCase().includes(search)
+        );
+    }
+
+    // Category filter
+    if (App.filters.category) {
+        data = data.filter(item => item.category === App.filters.category);
+    }
+
+    // Subcategory filter
+    if (App.filters.subcategory) {
+        data = data.filter(item => item.subcategory === App.filters.subcategory);
+    }
+
+    // Gender filter
+    if (App.filters.gender) {
+        data = data.filter(item => item.gender === App.filters.gender);
+    }
+
+    // Stock filter
+    if (App.filters.stock) {
+        if (App.filters.stock === 'in-stock') {
+            data = data.filter(item => item.available > 20);
+        } else if (App.filters.stock === 'low') {
+            data = data.filter(item => item.available > 0 && item.available <= 20);
+        } else if (App.filters.stock === 'out') {
+            data = data.filter(item => item.available === 0);
+        }
+    }
+
+    App.filteredData = data;
+    App.currentPage = 1; // Reset to first page
+    updateDisplay();
+}
+
+// ===== SORTING =====
+function sortData(column) {
+    if (App.sortColumn === column) {
+        App.sortDirection = App.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+        App.sortColumn = column;
+        App.sortDirection = 'asc';
+    }
+
+    App.filteredData.sort((a, b) => {
+        let aVal = a[column];
+        let bVal = b[column];
+
+        // Convert to numbers if numeric column
+        if (['total', 'available', 'hold', 'sold', 'requested', 'retail', 'wholesale', 'msrp'].includes(column)) {
+            aVal = Number(aVal);
+            bVal = Number(bVal);
+        } else {
+            aVal = String(aVal).toLowerCase();
+            bVal = String(bVal).toLowerCase();
+        }
+
+        if (App.sortDirection === 'asc') {
+            return aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
+        } else {
+            return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
+        }
+    });
+
+    updateSortIndicators();
+    renderTable();
+}
+
+function updateSortIndicators() {
+    document.querySelectorAll('.data-table th').forEach(th => {
+        th.classList.remove('sort-asc', 'sort-desc');
+    });
+
+    const activeTh = document.querySelector(`[data-sort="${App.sortColumn}"]`);
+    if (activeTh) {
+        activeTh.classList.add(`sort-${App.sortDirection}`);
+    }
+}
+
+// ===== DISPLAY =====
+function updateDisplay() {
+    renderTable();
+    updateStats();
+    updatePagination();
+    updateSortIndicators();
+}
+
+function updateStats() {
+    document.getElementById('total-skus').textContent = INVENTORY_DATABASE.length;
+    document.getElementById('total-count').textContent = App.filteredData.length;
+
+    const lowStockCount = INVENTORY_DATABASE.filter(item => item.available > 0 && item.available <= 20).length;
+    document.getElementById('low-stock-count').textContent = lowStockCount;
+}
+
+function renderTable() {
+    const tbody = document.getElementById('table-body');
+    tbody.innerHTML = '';
+
+    const start = (App.currentPage - 1) * App.itemsPerPage;
+    const end = start + App.itemsPerPage;
+    const pageData = App.filteredData.slice(start, end);
+
+    document.getElementById('showing-count').textContent = Math.min(end, App.filteredData.length);
+
+    pageData.forEach(item => {
+        const row = document.createElement('tr');
+        row.dataset.sku = item.sku;
+
+        // Determine stock status classes
+        let availClass = 'numeric';
+        if (item.available === 0) {
+            availClass += ' out-of-stock';
+        } else if (item.available <= 20) {
+            availClass += ' low-stock';
+        }
+
+        row.innerHTML = `
+            <td class="sku">${item.sku}</td>
+            <td>${item.name}</td>
+            <td>${item.category}</td>
+            <td>${item.subcategory}</td>
+            <td class="numeric">${item.total}</td>
+            <td class="${availClass}">${item.available}</td>
+            <td class="numeric">${item.hold}</td>
+            <td class="numeric">${item.sold}</td>
+            <td class="numeric">${item.requested}</td>
+            <td class="numeric">$${item.retail.toFixed(2)}</td>
+        `;
+
+        row.addEventListener('click', () => showDetailPanel(item));
+        tbody.appendChild(row);
+    });
+}
+
+function updatePagination() {
+    const totalPages = Math.ceil(App.filteredData.length / App.itemsPerPage);
+
+    document.getElementById('total-pages').textContent = totalPages;
+    document.getElementById('page-input').value = App.currentPage;
+    document.getElementById('page-input').max = totalPages;
+
+    const prevBtn = document.getElementById('prev-page');
+    const nextBtn = document.getElementById('next-page');
+
+    prevBtn.disabled = App.currentPage === 1;
+    nextBtn.disabled = App.currentPage === totalPages || totalPages === 0;
+}
+
+// ===== DETAIL PANEL =====
+function showDetailPanel(item) {
+    const panel = document.getElementById('detail-panel');
+    const content = document.getElementById('detail-content');
+
+    let stockStatus = 'In Stock';
+    let stockClass = 'success';
+    if (item.available === 0) {
+        stockStatus = 'Out of Stock';
+        stockClass = 'danger';
+    } else if (item.available <= 20) {
+        stockStatus = 'Low Stock';
+        stockClass = 'warning';
+    }
+
+    content.innerHTML = `
+        <div class="detail-section">
+            <h3>SKU: ${item.sku}</h3>
+            <div class="detail-grid">
+                <span class="detail-label">Product Name:</span>
+                <span class="detail-value">${item.name}</span>
+
+                <span class="detail-label">Manufacturer:</span>
+                <span class="detail-value">${item.manufacturer}</span>
+
+                <span class="detail-label">Category:</span>
+                <span class="detail-value">${item.category}</span>
+
+                <span class="detail-label">Subcategory:</span>
+                <span class="detail-value">${item.subcategory}</span>
+
+                <span class="detail-label">Gender:</span>
+                <span class="detail-value">${item.gender === 'M' ? 'Men\'s' : item.gender === 'W' ? 'Women\'s' : 'Unisex'}</span>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h3>INVENTORY STATUS</h3>
+            <div class="detail-grid">
+                <span class="detail-label">Total Stock:</span>
+                <span class="detail-value">${item.total}</span>
+
+                <span class="detail-label">Available:</span>
+                <span class="detail-value ${stockClass}">${item.available}</span>
+
+                <span class="detail-label">On Hold:</span>
+                <span class="detail-value warning">${item.hold}</span>
+
+                <span class="detail-label">Sold:</span>
+                <span class="detail-value">${item.sold}</span>
+
+                <span class="detail-label">Requested:</span>
+                <span class="detail-value">${item.requested}</span>
+
+                <span class="detail-label">Status:</span>
+                <span class="detail-value ${stockClass}">${stockStatus}</span>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h3>PRICING</h3>
+            <div class="detail-grid">
+                <span class="detail-label">Wholesale:</span>
+                <span class="detail-value">$${item.wholesale.toFixed(2)}</span>
+
+                <span class="detail-label">Retail:</span>
+                <span class="detail-value">$${item.retail.toFixed(2)}</span>
+
+                <span class="detail-label">MSRP:</span>
+                <span class="detail-value">$${item.msrp.toFixed(2)}</span>
+
+                <span class="detail-label">Margin:</span>
+                <span class="detail-value">${(((item.retail - item.wholesale) / item.wholesale) * 100).toFixed(1)}%</span>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h3>PRODUCT DETAILS</h3>
+            <div class="detail-grid">
+                <span class="detail-label">Available Sizes:</span>
+                <span class="detail-value">${item.sizes}</span>
+
+                <span class="detail-label">Available Colors:</span>
+                <span class="detail-value">${item.colors}</span>
+            </div>
+        </div>
+    `;
+
+    panel.classList.add('active');
+}
+
+function closeDetailPanel() {
+    document.getElementById('detail-panel').classList.remove('active');
+}
+
+// ===== EVENT LISTENERS =====
+function setupEventListeners() {
+    // Search
+    const searchInput = document.getElementById('search-input');
+    searchInput.addEventListener('input', (e) => {
+        App.filters.search = e.target.value;
+        applyFilters();
+    });
+
+    document.getElementById('clear-search').addEventListener('click', () => {
+        searchInput.value = '';
+        App.filters.search = '';
+        applyFilters();
+    });
+
+    // Filters
+    document.getElementById('filter-category').addEventListener('change', (e) => {
+        App.filters.category = e.target.value;
+        App.filters.subcategory = ''; // Reset subcategory
+        updateSubcategoryFilter();
+        applyFilters();
+    });
+
+    document.getElementById('filter-subcategory').addEventListener('change', (e) => {
+        App.filters.subcategory = e.target.value;
+        applyFilters();
+    });
+
+    document.getElementById('filter-gender').addEventListener('change', (e) => {
+        App.filters.gender = e.target.value;
+        applyFilters();
+    });
+
+    document.getElementById('filter-stock').addEventListener('change', (e) => {
+        App.filters.stock = e.target.value;
+        applyFilters();
+    });
+
+    document.getElementById('reset-filters').addEventListener('click', () => {
+        App.filters = { search: '', category: '', subcategory: '', gender: '', stock: '' };
+        document.getElementById('search-input').value = '';
+        document.getElementById('filter-category').value = '';
+        document.getElementById('filter-subcategory').value = '';
+        document.getElementById('filter-gender').value = '';
+        document.getElementById('filter-stock').value = '';
+        updateSubcategoryFilter();
+        applyFilters();
+    });
+
+    // Sorting
+    document.querySelectorAll('.sortable').forEach(th => {
+        th.addEventListener('click', () => {
+            const column = th.dataset.sort;
+            sortData(column);
+        });
+    });
+
+    // Pagination
+    document.getElementById('prev-page').addEventListener('click', () => {
+        if (App.currentPage > 1) {
+            App.currentPage--;
+            updateDisplay();
+        }
+    });
+
+    document.getElementById('next-page').addEventListener('click', () => {
+        const totalPages = Math.ceil(App.filteredData.length / App.itemsPerPage);
+        if (App.currentPage < totalPages) {
+            App.currentPage++;
+            updateDisplay();
+        }
+    });
+
+    document.getElementById('page-input').addEventListener('change', (e) => {
+        const page = parseInt(e.target.value);
+        const totalPages = Math.ceil(App.filteredData.length / App.itemsPerPage);
+        if (page >= 1 && page <= totalPages) {
+            App.currentPage = page;
+            updateDisplay();
+        } else {
+            e.target.value = App.currentPage;
+        }
+    });
+
+    document.getElementById('items-per-page').addEventListener('change', (e) => {
+        App.itemsPerPage = parseInt(e.target.value);
+        App.currentPage = 1;
+        updateDisplay();
+    });
+
+    // Detail panel
+    document.getElementById('close-detail').addEventListener('click', closeDetailPanel);
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        // ESC to close detail panel
+        if (e.key === 'Escape') {
+            closeDetailPanel();
+        }
+        // Ctrl/Cmd + F to focus search
+        if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+            e.preventDefault();
+            searchInput.focus();
+        }
+    });
+}
+
+// ===== SCREEN MANAGEMENT =====
 function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
@@ -61,384 +575,7 @@ function showScreen(screenId) {
     document.getElementById(screenId).classList.add('active');
 }
 
-function showView(viewId) {
-    document.querySelectorAll('.view').forEach(view => {
-        view.classList.remove('active');
-    });
-    document.getElementById(viewId).classList.add('active');
-}
-
-// Initialization Screen
-function initializeApp() {
-    const storeNameInput = document.getElementById('store-name');
-    const primaryColorInput = document.getElementById('primary-color');
-    const accentColorInput = document.getElementById('accent-color');
-    const backgroundColorInput = document.getElementById('background-color');
-    const continueBtn = document.getElementById('continue-btn');
-
-    // Update hex displays
-    primaryColorInput.addEventListener('input', (e) => {
-        document.getElementById('primary-hex').textContent = e.target.value;
-        AppState.primaryColor = e.target.value;
-        applyColorTheme();
-    });
-
-    accentColorInput.addEventListener('input', (e) => {
-        document.getElementById('accent-hex').textContent = e.target.value;
-        AppState.accentColor = e.target.value;
-        applyColorTheme();
-    });
-
-    backgroundColorInput.addEventListener('input', (e) => {
-        document.getElementById('background-hex').textContent = e.target.value;
-        AppState.backgroundColor = e.target.value;
-        applyColorTheme();
-    });
-
-    continueBtn.addEventListener('click', () => {
-        const storeName = storeNameInput.value.trim();
-        if (!storeName) {
-            storeNameInput.focus();
-            storeNameInput.style.borderColor = 'var(--danger-color)';
-            setTimeout(() => {
-                storeNameInput.style.borderColor = '';
-            }, 1000);
-            return;
-        }
-
-        AppState.storeName = storeName;
-        startLoadingSequence();
-    });
-
-    // Allow Enter key to continue
-    storeNameInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            continueBtn.click();
-        }
-    });
-}
-
-// Loading Screen
-function startLoadingSequence() {
-    showScreen('loading-screen');
-    document.getElementById('store-name-display').textContent = AppState.storeName;
-
-    const progressFill = document.getElementById('progress-fill');
-    const progressText = document.getElementById('progress-text');
-
-    const steps = [
-        { percent: 15, text: 'Connecting to server...', duration: 500 },
-        { percent: 35, text: 'Authenticating credentials...', duration: 700 },
-        { percent: 55, text: 'Loading inventory database...', duration: 600 },
-        { percent: 75, text: 'Synchronizing data...', duration: 500 },
-        { percent: 90, text: 'Preparing dashboard...', duration: 400 },
-        { percent: 100, text: 'Complete!', duration: 300 }
-    ];
-
-    let currentStep = 0;
-
-    function nextStep() {
-        if (currentStep < steps.length) {
-            const step = steps[currentStep];
-            progressFill.style.width = step.percent + '%';
-            progressText.textContent = step.text;
-            currentStep++;
-            setTimeout(nextStep, step.duration);
-        } else {
-            setTimeout(() => {
-                initializeDashboard();
-                showScreen('main-screen');
-            }, 500);
-        }
-    }
-
-    nextStep();
-}
-
-// Dashboard Initialization
-function initializeDashboard() {
-    document.getElementById('dashboard-store-name').textContent = AppState.storeName;
-    updateCategoryCounts();
-
-    // Category card click handlers
-    document.querySelectorAll('.category-card').forEach(card => {
-        card.addEventListener('click', () => {
-            const category = card.dataset.category;
-            showSubcategories(category);
-        });
-    });
-}
-
-function updateCategoryCounts() {
-    Object.keys(INVENTORY_DATA).forEach(category => {
-        let totalItems = 0;
-        const subcategories = INVENTORY_DATA[category].subcategories;
-
-        Object.keys(subcategories).forEach(subcat => {
-            totalItems += subcategories[subcat].products.length;
-        });
-
-        const countElement = document.getElementById(`${category}-count`);
-        if (countElement) {
-            countElement.textContent = `${totalItems} items`;
-        }
-    });
-}
-
-// Navigation
-function setupNavigation() {
-    const backBtn = document.getElementById('back-btn');
-
-    backBtn.addEventListener('click', () => {
-        if (AppState.navigationHistory.length > 0) {
-            const previous = AppState.navigationHistory.pop();
-
-            if (previous.type === 'dashboard') {
-                showView('dashboard-view');
-                document.getElementById('header-title').textContent = 'Dashboard';
-                if (AppState.navigationHistory.length === 0) {
-                    backBtn.classList.remove('visible');
-                }
-            } else if (previous.type === 'subcategories') {
-                showSubcategories(previous.category);
-            } else if (previous.type === 'products') {
-                showProducts(previous.category, previous.subcategory);
-            }
-        }
-    });
-}
-
-// Subcategories View
-function showSubcategories(category) {
-    AppState.currentCategory = category;
-    AppState.navigationHistory.push({ type: 'dashboard' });
-
-    const categoryData = INVENTORY_DATA[category];
-    const subcategoryList = document.getElementById('subcategory-list');
-
-    document.getElementById('header-title').textContent = categoryData.name;
-    document.getElementById('back-btn').classList.add('visible');
-
-    subcategoryList.innerHTML = '';
-
-    Object.keys(categoryData.subcategories).forEach(subcatKey => {
-        const subcat = categoryData.subcategories[subcatKey];
-        const productCount = subcat.products.length;
-
-        const item = document.createElement('div');
-        item.className = 'subcategory-item';
-        item.innerHTML = `
-            <div class="subcategory-info">
-                <h3>${subcat.name}</h3>
-                <p>${productCount} product${productCount !== 1 ? 's' : ''}</p>
-            </div>
-            <div class="subcategory-arrow">→</div>
-        `;
-
-        item.addEventListener('click', () => {
-            showProducts(category, subcatKey);
-        });
-
-        subcategoryList.appendChild(item);
-    });
-
-    showView('subcategories-view');
-}
-
-// Products View
-function showProducts(category, subcategory) {
-    AppState.currentSubcategory = subcategory;
-    AppState.navigationHistory.push({
-        type: 'subcategories',
-        category: category
-    });
-
-    const subcatData = INVENTORY_DATA[category].subcategories[subcategory];
-    const productsGrid = document.getElementById('products-grid');
-
-    document.getElementById('header-title').textContent = subcatData.name;
-
-    productsGrid.innerHTML = '';
-
-    subcatData.products.forEach(product => {
-        const card = createProductCard(product);
-        productsGrid.appendChild(card);
-    });
-
-    showView('products-view');
-}
-
-function createProductCard(product) {
-    const card = document.createElement('div');
-    card.className = 'product-card';
-
-    card.innerHTML = `
-        <div class="product-header">
-            <span class="product-code">${product.code}</span>
-        </div>
-        <h3 class="product-name">${product.name}</h3>
-        <p class="product-manufacturer">${product.manufacturer}</p>
-        <div class="product-stats">
-            <div class="stat-item">
-                <span class="stat-label">Available</span>
-                <span class="stat-value available">${product.available}</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Total</span>
-                <span class="stat-value">${product.total}</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">On Hold</span>
-                <span class="stat-value onhold">${product.onHold}</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Sold</span>
-                <span class="stat-value sold">${product.sold}</span>
-            </div>
-        </div>
-    `;
-
-    card.addEventListener('click', () => {
-        showProductModal(product);
-    });
-
-    return card;
-}
-
-// View Toggle
-function setupViewToggle() {
-    const toggleBtns = document.querySelectorAll('.toggle-btn');
-    const productsGrid = document.getElementById('products-grid');
-
-    toggleBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            toggleBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            const view = btn.dataset.view;
-            if (view === 'list') {
-                productsGrid.classList.add('list-view');
-            } else {
-                productsGrid.classList.remove('list-view');
-            }
-        });
-    });
-}
-
-// Product Modal
-function showProductModal(product) {
-    const modal = document.getElementById('product-modal');
-    const modalBody = document.getElementById('modal-body');
-
-    modalBody.innerHTML = `
-        <div class="modal-product-header">
-            <span class="modal-product-code">${product.code}</span>
-            <h2 class="modal-product-name">${product.name}</h2>
-            <p class="modal-product-manufacturer">${product.manufacturer}</p>
-        </div>
-
-        <div class="modal-section">
-            <h3 class="modal-section-title">Inventory Status</h3>
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <span class="detail-label">Total Stock</span>
-                    <span class="detail-value">${product.total}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Available</span>
-                    <span class="detail-value" style="color: var(--success-color);">${product.available}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">On Hold</span>
-                    <span class="detail-value" style="color: var(--warning-color);">${product.onHold}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Sold</span>
-                    <span class="detail-value">${product.sold}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Requested</span>
-                    <span class="detail-value" style="color: var(--accent-color);">${product.requested}</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-section">
-            <h3 class="modal-section-title">Product Details</h3>
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <span class="detail-label">Material</span>
-                    <span class="detail-value">${product.material}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Weight</span>
-                    <span class="detail-value">${product.weight}</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-section">
-            <h3 class="modal-section-title">Available Sizes</h3>
-            <div class="tag-list">
-                ${product.sizes.map(size => `<span class="tag">${size}</span>`).join('')}
-            </div>
-        </div>
-
-        <div class="modal-section">
-            <h3 class="modal-section-title">Available Colors</h3>
-            <div class="tag-list">
-                ${product.colors.map(color => `<span class="tag">${color}</span>`).join('')}
-            </div>
-        </div>
-
-        <div class="modal-section">
-            <h3 class="modal-section-title">Pricing</h3>
-            <div class="price-grid">
-                <div class="detail-item">
-                    <span class="detail-label">Wholesale</span>
-                    <span class="detail-value">$${product.wholesalePrice.toFixed(2)}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Retail</span>
-                    <span class="detail-value">$${product.retailPrice.toFixed(2)}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">MSRP</span>
-                    <span class="detail-value">$${product.msrp.toFixed(2)}</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-section">
-            <h3 class="modal-section-title">Features</h3>
-            <div class="tag-list">
-                ${product.features.map(feature => `<span class="tag">${feature}</span>`).join('')}
-            </div>
-        </div>
-    `;
-
-    modal.classList.add('active');
-}
-
-function setupModal() {
-    const modal = document.getElementById('product-modal');
-    const modalClose = modal.querySelector('.modal-close');
-    const modalOverlay = modal.querySelector('.modal-overlay');
-
-    modalClose.addEventListener('click', () => {
-        modal.classList.remove('active');
-    });
-
-    modalOverlay.addEventListener('click', () => {
-        modal.classList.remove('active');
-    });
-}
-
-// Initialize everything when DOM is ready
+// ===== INITIALIZE ON LOAD =====
 document.addEventListener('DOMContentLoaded', () => {
-    initializeApp();
-    setupNavigation();
-    setupViewToggle();
-    setupModal();
-    applyColorTheme();
+    initializeSetup();
 });

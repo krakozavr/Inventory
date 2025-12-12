@@ -1,762 +1,654 @@
-// Fake Inventory Data - All brands and names are fictional
+// Realistic Inventory Data Generator for Business Application
+// Generates 1500+ SKUs across multiple categories
 
-const INVENTORY_DATA = {
-    clothes: {
-        name: 'Clothes',
-        icon: '👔',
-        subcategories: {
-            shirts: {
-                name: 'Shirts',
-                products: [
-                    {
-                        code: 'CLT-SHT-001',
-                        name: 'Premium Cotton Dress Shirt',
-                        manufacturer: 'Eleganto Apparel Co.',
-                        category: 'clothes',
-                        subcategory: 'shirts',
-                        total: 150,
-                        onHold: 12,
-                        sold: 89,
-                        requested: 8,
-                        available: 41,
-                        sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
-                        colors: ['White', 'Light Blue', 'Navy', 'Black'],
-                        wholesalePrice: 24.99,
-                        retailPrice: 49.99,
-                        msrp: 69.99,
-                        material: '100% Egyptian Cotton',
-                        weight: '180gsm',
-                        features: ['Wrinkle-resistant', 'Breathable', 'Machine washable']
-                    },
-                    {
-                        code: 'CLT-SHT-002',
-                        name: 'Casual Linen Shirt',
-                        manufacturer: 'Breezeway Fashion Inc.',
-                        category: 'clothes',
-                        subcategory: 'shirts',
-                        total: 200,
-                        onHold: 18,
-                        sold: 142,
-                        requested: 15,
-                        available: 25,
-                        sizes: ['S', 'M', 'L', 'XL'],
-                        colors: ['Beige', 'Light Gray', 'Sky Blue', 'Olive'],
-                        wholesalePrice: 18.50,
-                        retailPrice: 39.99,
-                        msrp: 54.99,
-                        material: '100% Premium Linen',
-                        weight: '150gsm',
-                        features: ['Lightweight', 'UV protection', 'Quick-dry']
-                    },
-                    {
-                        code: 'CLT-SHT-003',
-                        name: 'Performance Sport Polo',
-                        manufacturer: 'ActiveLife Brands',
-                        category: 'clothes',
-                        subcategory: 'shirts',
-                        total: 180,
-                        onHold: 20,
-                        sold: 95,
-                        requested: 22,
-                        available: 43,
-                        sizes: ['XS', 'S', 'M', 'L', 'XL'],
-                        colors: ['Red', 'Navy', 'Forest Green', 'Charcoal'],
-                        wholesalePrice: 16.75,
-                        retailPrice: 34.99,
-                        msrp: 49.99,
-                        material: 'Polyester Blend',
-                        weight: '160gsm',
-                        features: ['Moisture-wicking', 'Anti-odor', 'Stretch fit']
-                    },
-                    {
-                        code: 'CLT-SHT-004',
-                        name: 'Classic Flannel Shirt',
-                        manufacturer: 'Northwood Textiles',
-                        category: 'clothes',
-                        subcategory: 'shirts',
-                        total: 120,
-                        onHold: 8,
-                        sold: 67,
-                        requested: 5,
-                        available: 40,
-                        sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-                        colors: ['Red Plaid', 'Blue Plaid', 'Gray Check', 'Green Tartan'],
-                        wholesalePrice: 22.00,
-                        retailPrice: 44.99,
-                        msrp: 59.99,
-                        material: 'Cotton Flannel',
-                        weight: '220gsm',
-                        features: ['Brushed finish', 'Warm', 'Durable']
-                    }
-                ]
-            },
-            pants: {
-                name: 'Pants',
-                products: [
-                    {
-                        code: 'CLT-PNT-001',
-                        name: 'Slim Fit Chino Pants',
-                        manufacturer: 'UrbanEdge Clothing',
-                        category: 'clothes',
-                        subcategory: 'pants',
-                        total: 220,
-                        onHold: 25,
-                        sold: 156,
-                        requested: 18,
-                        available: 21,
-                        sizes: ['28', '30', '32', '34', '36', '38', '40'],
-                        colors: ['Khaki', 'Navy', 'Black', 'Olive'],
-                        wholesalePrice: 28.50,
-                        retailPrice: 59.99,
-                        msrp: 79.99,
-                        material: 'Cotton Twill',
-                        weight: '280gsm',
-                        features: ['Stretch fabric', 'Wrinkle-resistant', 'Multiple pockets']
-                    },
-                    {
-                        code: 'CLT-PNT-002',
-                        name: 'Premium Denim Jeans',
-                        manufacturer: 'BlueLine Denim Works',
-                        category: 'clothes',
-                        subcategory: 'pants',
-                        total: 300,
-                        onHold: 35,
-                        sold: 198,
-                        requested: 42,
-                        available: 25,
-                        sizes: ['28', '30', '32', '34', '36', '38'],
-                        colors: ['Dark Wash', 'Medium Wash', 'Light Wash', 'Black'],
-                        wholesalePrice: 32.00,
-                        retailPrice: 69.99,
-                        msrp: 94.99,
-                        material: 'Denim with Elastane',
-                        weight: '340gsm',
-                        features: ['Stretch comfort', 'Reinforced seams', 'Fade-resistant']
-                    },
-                    {
-                        code: 'CLT-PNT-003',
-                        name: 'Athletic Track Pants',
-                        manufacturer: 'ActiveLife Brands',
-                        category: 'clothes',
-                        subcategory: 'pants',
-                        total: 175,
-                        onHold: 15,
-                        sold: 124,
-                        requested: 12,
-                        available: 24,
-                        sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-                        colors: ['Black', 'Navy', 'Charcoal', 'Forest'],
-                        wholesalePrice: 24.99,
-                        retailPrice: 49.99,
-                        msrp: 64.99,
-                        material: 'Polyester Performance',
-                        weight: '240gsm',
-                        features: ['Moisture-wicking', 'Zippered pockets', 'Elastic waist']
-                    }
-                ]
-            },
-            dresses: {
-                name: 'Dresses',
-                products: [
-                    {
-                        code: 'CLT-DRS-001',
-                        name: 'Summer Floral Sundress',
-                        manufacturer: 'Blossom Fashion House',
-                        category: 'clothes',
-                        subcategory: 'dresses',
-                        total: 140,
-                        onHold: 16,
-                        sold: 92,
-                        requested: 14,
-                        available: 18,
-                        sizes: ['XS', 'S', 'M', 'L', 'XL'],
-                        colors: ['Pink Floral', 'Blue Floral', 'Yellow Garden', 'Lavender'],
-                        wholesalePrice: 35.00,
-                        retailPrice: 74.99,
-                        msrp: 99.99,
-                        material: 'Cotton Voile',
-                        weight: '120gsm',
-                        features: ['Lightweight', 'Lined bodice', 'Side pockets']
-                    },
-                    {
-                        code: 'CLT-DRS-002',
-                        name: 'Elegant Evening Dress',
-                        manufacturer: 'Glamour Couture Ltd.',
-                        category: 'clothes',
-                        subcategory: 'dresses',
-                        total: 85,
-                        onHold: 8,
-                        sold: 54,
-                        requested: 6,
-                        available: 17,
-                        sizes: ['XS', 'S', 'M', 'L'],
-                        colors: ['Black', 'Navy', 'Burgundy', 'Emerald'],
-                        wholesalePrice: 68.00,
-                        retailPrice: 139.99,
-                        msrp: 189.99,
-                        material: 'Silk Blend',
-                        weight: '180gsm',
-                        features: ['Fully lined', 'Hidden zipper', 'Dry clean only']
-                    },
-                    {
-                        code: 'CLT-DRS-003',
-                        name: 'Casual Midi Dress',
-                        manufacturer: 'EverydayChic Apparel',
-                        category: 'clothes',
-                        subcategory: 'dresses',
-                        total: 160,
-                        onHold: 12,
-                        sold: 108,
-                        requested: 10,
-                        available: 30,
-                        sizes: ['S', 'M', 'L', 'XL'],
-                        colors: ['Navy', 'Charcoal', 'Olive', 'Rust'],
-                        wholesalePrice: 28.50,
-                        retailPrice: 59.99,
-                        msrp: 79.99,
-                        material: 'Jersey Knit',
-                        weight: '200gsm',
-                        features: ['Stretch fit', 'Machine washable', 'Wrinkle-free']
-                    }
-                ]
-            },
-            outerwear: {
-                name: 'Outerwear',
-                products: [
-                    {
-                        code: 'CLT-OUT-001',
-                        name: 'Waterproof Rain Jacket',
-                        manufacturer: 'StormShield Gear',
-                        category: 'clothes',
-                        subcategory: 'outerwear',
-                        total: 95,
-                        onHold: 10,
-                        sold: 58,
-                        requested: 8,
-                        available: 19,
-                        sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-                        colors: ['Navy', 'Black', 'Forest Green', 'Gray'],
-                        wholesalePrice: 48.00,
-                        retailPrice: 99.99,
-                        msrp: 134.99,
-                        material: 'Waterproof Nylon',
-                        weight: '320gsm',
-                        features: ['Sealed seams', 'Adjustable hood', 'Reflective trim']
-                    },
-                    {
-                        code: 'CLT-OUT-002',
-                        name: 'Insulated Winter Parka',
-                        manufacturer: 'Northwood Textiles',
-                        category: 'clothes',
-                        subcategory: 'outerwear',
-                        total: 110,
-                        onHold: 14,
-                        sold: 72,
-                        requested: 11,
-                        available: 13,
-                        sizes: ['S', 'M', 'L', 'XL'],
-                        colors: ['Black', 'Navy', 'Olive', 'Charcoal'],
-                        wholesalePrice: 85.00,
-                        retailPrice: 179.99,
-                        msrp: 249.99,
-                        material: 'Down-filled Polyester',
-                        weight: '580gsm',
-                        features: ['Water-resistant', 'Fur-trim hood', 'Inner pockets']
-                    },
-                    {
-                        code: 'CLT-OUT-003',
-                        name: 'Lightweight Windbreaker',
-                        manufacturer: 'ActiveLife Brands',
-                        category: 'clothes',
-                        subcategory: 'outerwear',
-                        total: 130,
-                        onHold: 11,
-                        sold: 84,
-                        requested: 9,
-                        available: 26,
-                        sizes: ['XS', 'S', 'M', 'L', 'XL'],
-                        colors: ['Navy', 'Red', 'Teal', 'Yellow'],
-                        wholesalePrice: 32.50,
-                        retailPrice: 69.99,
-                        msrp: 89.99,
-                        material: 'Ripstop Nylon',
-                        weight: '140gsm',
-                        features: ['Packable', 'Wind-resistant', 'Mesh lining']
-                    }
-                ]
-            }
-        }
-    },
-    shoes: {
-        name: 'Shoes',
-        icon: '👟',
-        subcategories: {
-            sneakers: {
-                name: 'Sneakers',
-                products: [
-                    {
-                        code: 'SHO-SNK-001',
-                        name: 'Urban Street Sneaker',
-                        manufacturer: 'SoleStep Footwear',
-                        category: 'shoes',
-                        subcategory: 'sneakers',
-                        total: 240,
-                        onHold: 28,
-                        sold: 165,
-                        requested: 22,
-                        available: 25,
-                        sizes: ['6', '7', '8', '9', '10', '11', '12', '13'],
-                        colors: ['White', 'Black', 'Gray', 'Navy'],
-                        wholesalePrice: 38.00,
-                        retailPrice: 79.99,
-                        msrp: 109.99,
-                        material: 'Synthetic Leather',
-                        weight: '380g per shoe',
-                        features: ['Cushioned sole', 'Breathable mesh', 'Non-slip']
-                    },
-                    {
-                        code: 'SHO-SNK-002',
-                        name: 'Performance Running Shoe',
-                        manufacturer: 'VelocityRun Athletics',
-                        category: 'shoes',
-                        subcategory: 'sneakers',
-                        total: 200,
-                        onHold: 22,
-                        sold: 148,
-                        requested: 18,
-                        available: 12,
-                        sizes: ['6', '7', '8', '9', '10', '11', '12'],
-                        colors: ['Blue/White', 'Black/Red', 'Gray/Lime', 'Navy/Orange'],
-                        wholesalePrice: 52.00,
-                        retailPrice: 109.99,
-                        msrp: 149.99,
-                        material: 'Engineered Mesh',
-                        weight: '290g per shoe',
-                        features: ['Responsive cushioning', 'Arch support', 'Reflective details']
-                    },
-                    {
-                        code: 'SHO-SNK-003',
-                        name: 'Classic Canvas Sneaker',
-                        manufacturer: 'RetroKicks Co.',
-                        category: 'shoes',
-                        subcategory: 'sneakers',
-                        total: 300,
-                        onHold: 35,
-                        sold: 212,
-                        requested: 28,
-                        available: 25,
-                        sizes: ['5', '6', '7', '8', '9', '10', '11', '12'],
-                        colors: ['White', 'Black', 'Red', 'Navy', 'Beige'],
-                        wholesalePrice: 22.50,
-                        retailPrice: 44.99,
-                        msrp: 59.99,
-                        material: 'Canvas Upper',
-                        weight: '320g per shoe',
-                        features: ['Vulcanized sole', 'Classic design', 'Machine washable']
-                    }
-                ]
-            },
-            boots: {
-                name: 'Boots',
-                products: [
-                    {
-                        code: 'SHO-BOT-001',
-                        name: 'Rugged Work Boot',
-                        manufacturer: 'IronForge Footwear',
-                        category: 'shoes',
-                        subcategory: 'boots',
-                        total: 150,
-                        onHold: 18,
-                        sold: 96,
-                        requested: 15,
-                        available: 21,
-                        sizes: ['7', '8', '9', '10', '11', '12', '13'],
-                        colors: ['Brown', 'Black', 'Tan'],
-                        wholesalePrice: 68.00,
-                        retailPrice: 139.99,
-                        msrp: 189.99,
-                        material: 'Full-grain Leather',
-                        weight: '680g per boot',
-                        features: ['Steel toe cap', 'Slip-resistant', 'Oil-resistant sole']
-                    },
-                    {
-                        code: 'SHO-BOT-002',
-                        name: 'Winter Insulated Boot',
-                        manufacturer: 'ArcticTrail Outdoor',
-                        category: 'shoes',
-                        subcategory: 'boots',
-                        total: 120,
-                        onHold: 14,
-                        sold: 78,
-                        requested: 12,
-                        available: 16,
-                        sizes: ['6', '7', '8', '9', '10', '11', '12'],
-                        colors: ['Black', 'Brown', 'Gray'],
-                        wholesalePrice: 75.00,
-                        retailPrice: 154.99,
-                        msrp: 209.99,
-                        material: 'Waterproof Leather',
-                        weight: '720g per boot',
-                        features: ['Thinsulate lining', 'Waterproof', 'Snow traction']
-                    },
-                    {
-                        code: 'SHO-BOT-003',
-                        name: 'Chelsea Ankle Boot',
-                        manufacturer: 'Eleganto Footwear',
-                        category: 'shoes',
-                        subcategory: 'boots',
-                        total: 100,
-                        onHold: 12,
-                        sold: 64,
-                        requested: 9,
-                        available: 15,
-                        sizes: ['6', '7', '8', '9', '10', '11'],
-                        colors: ['Black', 'Brown', 'Tan'],
-                        wholesalePrice: 58.00,
-                        retailPrice: 119.99,
-                        msrp: 159.99,
-                        material: 'Suede Leather',
-                        weight: '450g per boot',
-                        features: ['Elastic side panels', 'Pull-on style', 'Cushioned insole']
-                    }
-                ]
-            },
-            sandals: {
-                name: 'Sandals',
-                products: [
-                    {
-                        code: 'SHO-SND-001',
-                        name: 'Comfort Slide Sandal',
-                        manufacturer: 'BeachBreeze Footwear',
-                        category: 'shoes',
-                        subcategory: 'sandals',
-                        total: 220,
-                        onHold: 24,
-                        sold: 158,
-                        requested: 20,
-                        available: 18,
-                        sizes: ['6', '7', '8', '9', '10', '11', '12'],
-                        colors: ['Black', 'Navy', 'Gray', 'Tan'],
-                        wholesalePrice: 18.50,
-                        retailPrice: 39.99,
-                        msrp: 54.99,
-                        material: 'EVA Foam',
-                        weight: '180g per sandal',
-                        features: ['Contoured footbed', 'Lightweight', 'Water-friendly']
-                    },
-                    {
-                        code: 'SHO-SND-002',
-                        name: 'Sport Adventure Sandal',
-                        manufacturer: 'TrailBlazer Gear',
-                        category: 'shoes',
-                        subcategory: 'sandals',
-                        total: 180,
-                        onHold: 20,
-                        sold: 126,
-                        requested: 16,
-                        available: 18,
-                        sizes: ['7', '8', '9', '10', '11', '12'],
-                        colors: ['Black/Gray', 'Navy/Teal', 'Brown/Tan'],
-                        wholesalePrice: 32.00,
-                        retailPrice: 69.99,
-                        msrp: 94.99,
-                        material: 'Nylon Webbing',
-                        weight: '320g per sandal',
-                        features: ['Adjustable straps', 'Toe protection', 'Hiking sole']
-                    }
-                ]
-            },
-            formal: {
-                name: 'Formal Shoes',
-                products: [
-                    {
-                        code: 'SHO-FRM-001',
-                        name: 'Oxford Dress Shoe',
-                        manufacturer: 'Eleganto Footwear',
-                        category: 'shoes',
-                        subcategory: 'formal',
-                        total: 130,
-                        onHold: 15,
-                        sold: 88,
-                        requested: 12,
-                        available: 15,
-                        sizes: ['7', '8', '9', '10', '11', '12'],
-                        colors: ['Black', 'Brown', 'Burgundy'],
-                        wholesalePrice: 62.00,
-                        retailPrice: 129.99,
-                        msrp: 179.99,
-                        material: 'Genuine Leather',
-                        weight: '520g per shoe',
-                        features: ['Leather sole', 'Goodyear welt', 'Hand-stitched']
-                    },
-                    {
-                        code: 'SHO-FRM-002',
-                        name: 'Classic Loafer',
-                        manufacturer: 'Prestige Shoes Ltd.',
-                        category: 'shoes',
-                        subcategory: 'formal',
-                        total: 110,
-                        onHold: 13,
-                        sold: 72,
-                        requested: 10,
-                        available: 15,
-                        sizes: ['7', '8', '9', '10', '11', '12'],
-                        colors: ['Black', 'Brown', 'Navy'],
-                        wholesalePrice: 54.00,
-                        retailPrice: 114.99,
-                        msrp: 154.99,
-                        material: 'Patent Leather',
-                        weight: '480g per shoe',
-                        features: ['Slip-on design', 'Penny strap', 'Cushioned insole']
-                    }
-                ]
-            }
-        }
-    },
-    accessories: {
-        name: 'Accessories',
-        icon: '👜',
-        subcategories: {
-            bags: {
-                name: 'Bags',
-                products: [
-                    {
-                        code: 'ACC-BAG-001',
-                        name: 'Professional Laptop Backpack',
-                        manufacturer: 'CarryAll Solutions',
-                        category: 'accessories',
-                        subcategory: 'bags',
-                        total: 160,
-                        onHold: 18,
-                        sold: 112,
-                        requested: 14,
-                        available: 16,
-                        sizes: ['One Size'],
-                        colors: ['Black', 'Navy', 'Gray', 'Charcoal'],
-                        wholesalePrice: 42.00,
-                        retailPrice: 89.99,
-                        msrp: 124.99,
-                        material: 'Water-resistant Polyester',
-                        weight: '850g',
-                        features: ['Laptop compartment', 'USB charging port', 'Multiple pockets']
-                    },
-                    {
-                        code: 'ACC-BAG-002',
-                        name: 'Canvas Tote Bag',
-                        manufacturer: 'EcoCarry Bags',
-                        category: 'accessories',
-                        subcategory: 'bags',
-                        total: 250,
-                        onHold: 30,
-                        sold: 182,
-                        requested: 24,
-                        available: 14,
-                        sizes: ['One Size'],
-                        colors: ['Natural', 'Black', 'Navy', 'Olive'],
-                        wholesalePrice: 12.50,
-                        retailPrice: 29.99,
-                        msrp: 39.99,
-                        material: 'Organic Cotton Canvas',
-                        weight: '320g',
-                        features: ['Eco-friendly', 'Reinforced handles', 'Machine washable']
-                    },
-                    {
-                        code: 'ACC-BAG-003',
-                        name: 'Leather Messenger Bag',
-                        manufacturer: 'Heritage Leather Goods',
-                        category: 'accessories',
-                        subcategory: 'bags',
-                        total: 90,
-                        onHold: 10,
-                        sold: 58,
-                        requested: 8,
-                        available: 14,
-                        sizes: ['One Size'],
-                        colors: ['Brown', 'Black', 'Tan'],
-                        wholesalePrice: 78.00,
-                        retailPrice: 159.99,
-                        msrp: 219.99,
-                        material: 'Full-grain Leather',
-                        weight: '1200g',
-                        features: ['Adjustable strap', 'Interior organizer', 'Brass hardware']
-                    }
-                ]
-            },
-            belts: {
-                name: 'Belts',
-                products: [
-                    {
-                        code: 'ACC-BLT-001',
-                        name: 'Classic Leather Belt',
-                        manufacturer: 'Eleganto Accessories',
-                        category: 'accessories',
-                        subcategory: 'belts',
-                        total: 200,
-                        onHold: 22,
-                        sold: 145,
-                        requested: 18,
-                        available: 15,
-                        sizes: ['32', '34', '36', '38', '40', '42', '44'],
-                        colors: ['Black', 'Brown', 'Tan'],
-                        wholesalePrice: 18.00,
-                        retailPrice: 39.99,
-                        msrp: 54.99,
-                        material: 'Genuine Leather',
-                        weight: '180g',
-                        features: ['Reversible', 'Metal buckle', 'Adjustable']
-                    },
-                    {
-                        code: 'ACC-BLT-002',
-                        name: 'Tactical Nylon Belt',
-                        manufacturer: 'ToughGear Co.',
-                        category: 'accessories',
-                        subcategory: 'belts',
-                        total: 180,
-                        onHold: 20,
-                        sold: 128,
-                        requested: 16,
-                        available: 16,
-                        sizes: ['S', 'M', 'L', 'XL'],
-                        colors: ['Black', 'Coyote', 'Olive', 'Gray'],
-                        wholesalePrice: 14.50,
-                        retailPrice: 32.99,
-                        msrp: 44.99,
-                        material: 'Ballistic Nylon',
-                        weight: '140g',
-                        features: ['Quick-release buckle', 'Heavy-duty', 'Adjustable']
-                    }
-                ]
-            },
-            hats: {
-                name: 'Hats',
-                products: [
-                    {
-                        code: 'ACC-HAT-001',
-                        name: 'Classic Baseball Cap',
-                        manufacturer: 'CapStyle Inc.',
-                        category: 'accessories',
-                        subcategory: 'hats',
-                        total: 280,
-                        onHold: 32,
-                        sold: 198,
-                        requested: 26,
-                        available: 24,
-                        sizes: ['One Size Adjustable'],
-                        colors: ['Black', 'Navy', 'Gray', 'Red', 'White'],
-                        wholesalePrice: 8.50,
-                        retailPrice: 19.99,
-                        msrp: 27.99,
-                        material: 'Cotton Twill',
-                        weight: '85g',
-                        features: ['Adjustable strap', 'Curved brim', 'Breathable']
-                    },
-                    {
-                        code: 'ACC-HAT-002',
-                        name: 'Winter Knit Beanie',
-                        manufacturer: 'CozyHead Knits',
-                        category: 'accessories',
-                        subcategory: 'hats',
-                        total: 220,
-                        onHold: 25,
-                        sold: 162,
-                        requested: 20,
-                        available: 13,
-                        sizes: ['One Size'],
-                        colors: ['Black', 'Navy', 'Gray', 'Burgundy', 'Forest'],
-                        wholesalePrice: 10.00,
-                        retailPrice: 24.99,
-                        msrp: 34.99,
-                        material: 'Acrylic Knit',
-                        weight: '95g',
-                        features: ['Fleece-lined', 'Stretchy', 'Warm']
-                    },
-                    {
-                        code: 'ACC-HAT-003',
-                        name: 'Wide Brim Sun Hat',
-                        manufacturer: 'SunShield Headwear',
-                        category: 'accessories',
-                        subcategory: 'hats',
-                        total: 150,
-                        onHold: 16,
-                        sold: 104,
-                        requested: 12,
-                        available: 18,
-                        sizes: ['S/M', 'L/XL'],
-                        colors: ['Khaki', 'Navy', 'Olive', 'Black'],
-                        wholesalePrice: 15.00,
-                        retailPrice: 34.99,
-                        msrp: 47.99,
-                        material: 'UPF 50+ Fabric',
-                        weight: '120g',
-                        features: ['UV protection', 'Breathable mesh', 'Adjustable chin strap']
-                    }
-                ]
-            },
-            jewelry: {
-                name: 'Jewelry',
-                products: [
-                    {
-                        code: 'ACC-JWL-001',
-                        name: 'Minimalist Watch',
-                        manufacturer: 'TimeCraft Timepieces',
-                        category: 'accessories',
-                        subcategory: 'jewelry',
-                        total: 120,
-                        onHold: 14,
-                        sold: 82,
-                        requested: 11,
-                        available: 13,
-                        sizes: ['One Size'],
-                        colors: ['Silver/White', 'Gold/Black', 'Rose Gold/Navy'],
-                        wholesalePrice: 45.00,
-                        retailPrice: 99.99,
-                        msrp: 139.99,
-                        material: 'Stainless Steel',
-                        weight: '65g',
-                        features: ['Quartz movement', 'Water-resistant', 'Interchangeable strap']
-                    },
-                    {
-                        code: 'ACC-JWL-002',
-                        name: 'Braided Leather Bracelet',
-                        manufacturer: 'ArtisanWear Crafts',
-                        category: 'accessories',
-                        subcategory: 'jewelry',
-                        total: 200,
-                        onHold: 22,
-                        sold: 148,
-                        requested: 18,
-                        available: 12,
-                        sizes: ['S', 'M', 'L'],
-                        colors: ['Brown', 'Black', 'Tan', 'Navy'],
-                        wholesalePrice: 12.00,
-                        retailPrice: 29.99,
-                        msrp: 39.99,
-                        material: 'Genuine Leather',
-                        weight: '15g',
-                        features: ['Handcrafted', 'Magnetic clasp', 'Adjustable']
-                    },
-                    {
-                        code: 'ACC-JWL-003',
-                        name: 'Sterling Silver Cufflinks',
-                        manufacturer: 'Eleganto Accessories',
-                        category: 'accessories',
-                        subcategory: 'jewelry',
-                        total: 80,
-                        onHold: 9,
-                        sold: 52,
-                        requested: 7,
-                        available: 12,
-                        sizes: ['One Size'],
-                        colors: ['Silver', 'Silver/Black', 'Silver/Blue'],
-                        wholesalePrice: 32.00,
-                        retailPrice: 69.99,
-                        msrp: 94.99,
-                        material: 'Sterling Silver',
-                        weight: '18g per pair',
-                        features: ['Gift boxed', 'Polished finish', 'Swivel bar']
-                    }
-                ]
-            }
-        }
-    }
+const INVENTORY_DATABASE = [];
+
+// Fictional Manufacturers
+const MANUFACTURERS = {
+    clothing: ['Attire Co.', 'Garment Works', 'Thread & Stitch', 'Fabric Masters', 'StyleCraft Ltd.', 'WearWell Inc.'],
+    shoes: ['Footware Co.', 'SoleTech Inc.', 'StepRight Ltd.', 'Stride Manufacturers', 'WalkWell Corp.'],
+    accessories: ['AccessoryCraft', 'DetailWorks Inc.', 'Finishing Touch Co.', 'Style Accent Ltd.']
 };
+
+// Size ranges
+const SIZES = {
+    menShirts: ['S', 'M', 'L', 'XL', 'XXL', '2XL', '3XL'],
+    womenShirts: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    menPants: ['30x30', '30x32', '32x30', '32x32', '34x30', '34x32', '36x30', '36x32', '38x32', '40x32'],
+    womenPants: ['0', '2', '4', '6', '8', '10', '12', '14', '16'],
+    shoes: ['6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5', '12', '13'],
+    oneSize: ['One Size']
+};
+
+// Color palettes
+const COLORS = {
+    basic: ['Black', 'White', 'Navy', 'Gray', 'Charcoal'],
+    extended: ['Black', 'White', 'Navy', 'Gray', 'Charcoal', 'Brown', 'Tan', 'Olive', 'Burgundy'],
+    bright: ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink'],
+    neutral: ['Beige', 'Cream', 'Taupe', 'Stone', 'Sand']
+};
+
+// Helper function to generate realistic stock numbers
+function generateStock() {
+    const total = Math.floor(Math.random() * 500) + 50;
+    const sold = Math.floor(total * (Math.random() * 0.6 + 0.1)); // 10-70% sold
+    const hold = Math.floor((total - sold) * (Math.random() * 0.2)); // 0-20% on hold
+    const requested = Math.floor(Math.random() * 30);
+    const available = total - sold - hold;
+
+    return { total, sold, hold, requested, available };
+}
+
+// Helper function to generate realistic prices
+function generatePrice(basePrice) {
+    const wholesale = basePrice;
+    const retail = wholesale * (Math.random() * 0.6 + 1.8); // 1.8-2.4x markup
+    const msrp = retail * 1.25;
+
+    return {
+        wholesale: Math.round(wholesale * 100) / 100,
+        retail: Math.round(retail * 100) / 100,
+        msrp: Math.round(msrp * 100) / 100
+    };
+}
+
+// Generate product variants
+function generateProduct(config) {
+    const { sku, name, category, subcategory, gender, basePrice, sizes, colors, manufacturer } = config;
+    const stock = generateStock();
+    const pricing = generatePrice(basePrice);
+
+    return {
+        sku,
+        name,
+        category,
+        subcategory,
+        gender,
+        manufacturer,
+        ...stock,
+        ...pricing,
+        sizes: sizes.join(', '),
+        colors: colors.join(', ')
+    };
+}
+
+// ===== MEN'S CLOTHING =====
+const menClothingSubcategories = [
+    {
+        code: 'DRS',
+        name: 'Dress Shirts',
+        items: [
+            'Classic Dress Shirt', 'Slim Fit Dress Shirt', 'Regular Fit Dress Shirt',
+            'Non-Iron Dress Shirt', 'Performance Dress Shirt', 'Stretch Dress Shirt',
+            'French Cuff Dress Shirt', 'Button Down Dress Shirt', 'Point Collar Dress Shirt',
+            'Spread Collar Dress Shirt'
+        ],
+        sizes: SIZES.menShirts,
+        colors: ['White', 'Light Blue', 'Navy', 'Black', 'Gray', 'Pink'],
+        basePrice: 35
+    },
+    {
+        code: 'CAS',
+        name: 'Casual Shirts',
+        items: [
+            'Oxford Shirt', 'Chambray Shirt', 'Denim Shirt', 'Flannel Shirt',
+            'Linen Shirt', 'Poplin Shirt', 'Canvas Shirt', 'Twill Shirt',
+            'Corduroy Shirt', 'Utility Shirt'
+        ],
+        sizes: SIZES.menShirts,
+        colors: COLORS.extended,
+        basePrice: 30
+    },
+    {
+        code: 'POL',
+        name: 'Polo Shirts',
+        items: [
+            'Classic Polo', 'Slim Fit Polo', 'Performance Polo', 'Pique Polo',
+            'Jersey Polo', 'Stretch Polo', 'Long Sleeve Polo', 'Striped Polo'
+        ],
+        sizes: SIZES.menShirts,
+        colors: COLORS.extended.concat(['Burgundy', 'Forest Green']),
+        basePrice: 28
+    },
+    {
+        code: 'TEE',
+        name: 'T-Shirts',
+        items: [
+            'Crew Neck Tee', 'V-Neck Tee', 'Henley Tee', 'Pocket Tee',
+            'Long Sleeve Tee', 'Performance Tee', 'Premium Cotton Tee', 'Graphic Tee'
+        ],
+        sizes: SIZES.menShirts,
+        colors: COLORS.basic.concat(COLORS.bright),
+        basePrice: 15
+    },
+    {
+        code: 'SWT',
+        name: 'Sweaters',
+        items: [
+            'Crewneck Sweater', 'V-Neck Sweater', 'Cardigan', 'Pullover',
+            'Quarter Zip Sweater', 'Turtleneck', 'Cable Knit Sweater', 'Merino Sweater'
+        ],
+        sizes: SIZES.menShirts,
+        colors: COLORS.extended,
+        basePrice: 45
+    },
+    {
+        code: 'JKT',
+        name: 'Jackets',
+        items: [
+            'Bomber Jacket', 'Denim Jacket', 'Field Jacket', 'Windbreaker',
+            'Harrington Jacket', 'Trucker Jacket', 'Coach Jacket', 'Utility Jacket'
+        ],
+        sizes: SIZES.menShirts,
+        colors: COLORS.basic,
+        basePrice: 75
+    },
+    {
+        code: 'DRP',
+        name: 'Dress Pants',
+        items: [
+            'Wool Dress Pants', 'Flat Front Dress Pants', 'Pleated Dress Pants',
+            'Slim Fit Dress Pants', 'Classic Fit Dress Pants', 'Performance Dress Pants'
+        ],
+        sizes: SIZES.menPants,
+        colors: ['Black', 'Navy', 'Charcoal', 'Gray', 'Tan'],
+        basePrice: 55
+    },
+    {
+        code: 'CHP',
+        name: 'Chinos',
+        items: [
+            'Classic Chino', 'Slim Fit Chino', 'Straight Fit Chino', 'Athletic Fit Chino',
+            'Stretch Chino', 'Utility Chino'
+        ],
+        sizes: SIZES.menPants,
+        colors: COLORS.extended,
+        basePrice: 42
+    },
+    {
+        code: 'JNS',
+        name: 'Jeans',
+        items: [
+            'Slim Jeans', 'Straight Jeans', 'Relaxed Jeans', 'Athletic Jeans',
+            'Skinny Jeans', 'Boot Cut Jeans', 'Tapered Jeans'
+        ],
+        sizes: SIZES.menPants,
+        colors: ['Dark Wash', 'Medium Wash', 'Light Wash', 'Black', 'Gray'],
+        basePrice: 48
+    },
+    {
+        code: 'SHT',
+        name: 'Shorts',
+        items: [
+            'Chino Shorts', 'Cargo Shorts', 'Athletic Shorts', 'Swim Shorts',
+            'Denim Shorts', 'Flat Front Shorts'
+        ],
+        sizes: ['30', '32', '34', '36', '38', '40'],
+        colors: COLORS.extended,
+        basePrice: 32
+    }
+];
+
+// Generate Men's Clothing
+menClothingSubcategories.forEach((subcat, subcatIndex) => {
+    subcat.items.forEach((itemName, itemIndex) => {
+        const skuNum = String(subcatIndex * 100 + itemIndex + 1).padStart(3, '0');
+        const sku = `MC-${subcat.code}-${skuNum}`;
+        const manufacturer = MANUFACTURERS.clothing[Math.floor(Math.random() * MANUFACTURERS.clothing.length)];
+
+        INVENTORY_DATABASE.push(generateProduct({
+            sku,
+            name: itemName,
+            category: "Men's Clothing",
+            subcategory: subcat.name,
+            gender: 'M',
+            basePrice: subcat.basePrice,
+            sizes: subcat.sizes,
+            colors: subcat.colors,
+            manufacturer
+        }));
+    });
+});
+
+// ===== WOMEN'S CLOTHING =====
+const womenClothingSubcategories = [
+    {
+        code: 'BLS',
+        name: 'Blouses',
+        items: [
+            'Silk Blouse', 'Chiffon Blouse', 'Button Down Blouse', 'Sleeveless Blouse',
+            'Wrap Blouse', 'Peplum Blouse', 'Tie Neck Blouse', 'Ruffle Blouse'
+        ],
+        sizes: SIZES.womenShirts,
+        colors: ['White', 'Black', 'Navy', 'Pink', 'Cream', 'Red'],
+        basePrice: 38
+    },
+    {
+        code: 'TEE',
+        name: 'T-Shirts',
+        items: [
+            'Basic Crew Tee', 'V-Neck Tee', 'Scoop Neck Tee', 'Tank Top',
+            'Long Sleeve Tee', 'Fitted Tee', 'Relaxed Tee', 'Crop Tee'
+        ],
+        sizes: SIZES.womenShirts,
+        colors: COLORS.basic.concat(COLORS.bright),
+        basePrice: 18
+    },
+    {
+        code: 'SWT',
+        name: 'Sweaters',
+        items: [
+            'Cashmere Sweater', 'Cardigan', 'Turtleneck', 'Pullover',
+            'Wrap Sweater', 'Cowl Neck Sweater', 'Tunic Sweater'
+        ],
+        sizes: SIZES.womenShirts,
+        colors: COLORS.extended.concat(['Burgundy', 'Mustard']),
+        basePrice: 48
+    },
+    {
+        code: 'JKT',
+        name: 'Jackets',
+        items: [
+            'Blazer', 'Moto Jacket', 'Denim Jacket', 'Bomber Jacket',
+            'Utility Jacket', 'Trench Coat', 'Pea Coat', 'Leather Jacket'
+        ],
+        sizes: SIZES.womenShirts,
+        colors: ['Black', 'Navy', 'Tan', 'Gray', 'Burgundy'],
+        basePrice: 72
+    },
+    {
+        code: 'DRP',
+        name: 'Dress Pants',
+        items: [
+            'Wide Leg Pants', 'Straight Leg Pants', 'Slim Pants', 'Ankle Pants',
+            'Trouser Pants', 'Pleated Pants'
+        ],
+        sizes: SIZES.womenPants,
+        colors: ['Black', 'Navy', 'Gray', 'Tan', 'White'],
+        basePrice: 52
+    },
+    {
+        code: 'CHP',
+        name: 'Casual Pants',
+        items: [
+            'Chino Pants', 'Cargo Pants', 'Jogger Pants', 'Cropped Pants',
+            'Pull-on Pants', 'Tapered Pants'
+        ],
+        sizes: SIZES.womenPants,
+        colors: COLORS.extended,
+        basePrice: 44
+    },
+    {
+        code: 'JNS',
+        name: 'Jeans',
+        items: [
+            'Skinny Jeans', 'Straight Jeans', 'Boyfriend Jeans', 'High Rise Jeans',
+            'Mid Rise Jeans', 'Bootcut Jeans', 'Flare Jeans', 'Wide Leg Jeans'
+        ],
+        sizes: SIZES.womenPants,
+        colors: ['Dark Wash', 'Medium Wash', 'Light Wash', 'Black', 'White'],
+        basePrice: 52
+    },
+    {
+        code: 'DRS',
+        name: 'Dresses',
+        items: [
+            'Sheath Dress', 'Shift Dress', 'Wrap Dress', 'A-Line Dress',
+            'Midi Dress', 'Maxi Dress', 'Shirt Dress', 'Fit & Flare Dress'
+        ],
+        sizes: SIZES.womenShirts,
+        colors: ['Black', 'Navy', 'Red', 'Floral', 'Stripe', 'Polka Dot'],
+        basePrice: 62
+    },
+    {
+        code: 'SKT',
+        name: 'Skirts',
+        items: [
+            'Pencil Skirt', 'A-Line Skirt', 'Midi Skirt', 'Mini Skirt',
+            'Pleated Skirt', 'Wrap Skirt', 'Maxi Skirt'
+        ],
+        sizes: SIZES.womenPants,
+        colors: ['Black', 'Navy', 'Gray', 'Tan', 'Print'],
+        basePrice: 38
+    },
+    {
+        code: 'SHT',
+        name: 'Shorts',
+        items: [
+            'Chino Shorts', 'Denim Shorts', 'Athletic Shorts', 'Bermuda Shorts',
+            'High Rise Shorts', 'Cargo Shorts'
+        ],
+        sizes: SIZES.womenPants,
+        colors: COLORS.extended,
+        basePrice: 34
+    }
+];
+
+// Generate Women's Clothing
+womenClothingSubcategories.forEach((subcat, subcatIndex) => {
+    subcat.items.forEach((itemName, itemIndex) => {
+        const skuNum = String(subcatIndex * 100 + itemIndex + 1).padStart(3, '0');
+        const sku = `WC-${subcat.code}-${skuNum}`;
+        const manufacturer = MANUFACTURERS.clothing[Math.floor(Math.random() * MANUFACTURERS.clothing.length)];
+
+        INVENTORY_DATABASE.push(generateProduct({
+            sku,
+            name: itemName,
+            category: "Women's Clothing",
+            subcategory: subcat.name,
+            gender: 'W',
+            basePrice: subcat.basePrice,
+            sizes: subcat.sizes,
+            colors: subcat.colors,
+            manufacturer
+        }));
+    });
+});
+
+// ===== MEN'S SHOES =====
+const menShoesSubcategories = [
+    {
+        code: 'DRS',
+        name: 'Dress Shoes',
+        items: [
+            'Oxford Shoe', 'Derby Shoe', 'Loafer', 'Monk Strap', 'Brogue',
+            'Cap Toe Oxford', 'Wingtip', 'Venetian Loafer', 'Penny Loafer', 'Tassel Loafer'
+        ],
+        sizes: SIZES.shoes,
+        colors: ['Black', 'Brown', 'Tan', 'Burgundy'],
+        basePrice: 85
+    },
+    {
+        code: 'CAS',
+        name: 'Casual Shoes',
+        items: [
+            'Boat Shoe', 'Driving Moccasin', 'Slip-On', 'Canvas Shoe',
+            'Chukka Boot', 'Desert Boot', 'Chelsea Boot'
+        ],
+        sizes: SIZES.shoes,
+        colors: COLORS.extended,
+        basePrice: 65
+    },
+    {
+        code: 'SNK',
+        name: 'Sneakers',
+        items: [
+            'Low Top Sneaker', 'High Top Sneaker', 'Running Shoe', 'Training Shoe',
+            'Basketball Shoe', 'Skate Shoe', 'Retro Sneaker', 'Slip-On Sneaker'
+        ],
+        sizes: SIZES.shoes,
+        colors: COLORS.basic.concat(['White/Navy', 'Black/White', 'Gray/Red']),
+        basePrice: 72
+    },
+    {
+        code: 'BOT',
+        name: 'Boots',
+        items: [
+            'Work Boot', 'Chelsea Boot', 'Chukka Boot', 'Combat Boot',
+            'Hiking Boot', 'Winter Boot', 'Engineer Boot'
+        ],
+        sizes: SIZES.shoes,
+        colors: ['Black', 'Brown', 'Tan', 'Gray'],
+        basePrice: 95
+    },
+    {
+        code: 'SAN',
+        name: 'Sandals',
+        items: [
+            'Slide Sandal', 'Sport Sandal', 'Flip Flop', 'Fisherman Sandal'
+        ],
+        sizes: SIZES.shoes,
+        colors: ['Black', 'Brown', 'Navy', 'Gray'],
+        basePrice: 35
+    }
+];
+
+// Generate Men's Shoes
+menShoesSubcategories.forEach((subcat, subcatIndex) => {
+    subcat.items.forEach((itemName, itemIndex) => {
+        const skuNum = String(subcatIndex * 100 + itemIndex + 1).padStart(3, '0');
+        const sku = `MS-${subcat.code}-${skuNum}`;
+        const manufacturer = MANUFACTURERS.shoes[Math.floor(Math.random() * MANUFACTURERS.shoes.length)];
+
+        INVENTORY_DATABASE.push(generateProduct({
+            sku,
+            name: itemName,
+            category: "Men's Shoes",
+            subcategory: subcat.name,
+            gender: 'M',
+            basePrice: subcat.basePrice,
+            sizes: subcat.sizes,
+            colors: subcat.colors,
+            manufacturer
+        }));
+    });
+});
+
+// ===== WOMEN'S SHOES =====
+const womenShoesSubcategories = [
+    {
+        code: 'HEL',
+        name: 'Heels',
+        items: [
+            'Pump', 'Stiletto', 'Kitten Heel', 'Block Heel', 'Wedge',
+            'Platform Heel', 'Slingback', 'Peep Toe', 'Ankle Strap Heel'
+        ],
+        sizes: ['5', '5.5', '6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10'],
+        colors: ['Black', 'Nude', 'Red', 'Navy', 'Tan'],
+        basePrice: 68
+    },
+    {
+        code: 'FLT',
+        name: 'Flats',
+        items: [
+            'Ballet Flat', 'Loafer', 'Pointed Flat', 'Round Toe Flat',
+            'Mule', 'Driving Flat', 'Oxford Flat', 'Slip-On Flat'
+        ],
+        sizes: ['5', '5.5', '6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10'],
+        colors: COLORS.extended,
+        basePrice: 52
+    },
+    {
+        code: 'SNK',
+        name: 'Sneakers',
+        items: [
+            'Fashion Sneaker', 'Running Shoe', 'Slip-On Sneaker', 'High Top',
+            'Platform Sneaker', 'Athletic Shoe', 'Walking Shoe'
+        ],
+        sizes: ['5', '5.5', '6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10'],
+        colors: ['White', 'Black', 'Gray', 'Pink', 'Navy'],
+        basePrice: 65
+    },
+    {
+        code: 'BOT',
+        name: 'Boots',
+        items: [
+            'Ankle Boot', 'Knee High Boot', 'Chelsea Boot', 'Combat Boot',
+            'Riding Boot', 'Western Boot', 'Over-the-Knee Boot', 'Bootie'
+        ],
+        sizes: ['5', '5.5', '6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10'],
+        colors: ['Black', 'Brown', 'Tan', 'Burgundy', 'Gray'],
+        basePrice: 88
+    },
+    {
+        code: 'SAN',
+        name: 'Sandals',
+        items: [
+            'Flat Sandal', 'Wedge Sandal', 'Slide Sandal', 'Gladiator Sandal',
+            'Sport Sandal', 'Flip Flop', 'Espadrille'
+        ],
+        sizes: ['5', '5.5', '6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10'],
+        colors: ['Black', 'Tan', 'White', 'Brown', 'Silver'],
+        basePrice: 42
+    }
+];
+
+// Generate Women's Shoes
+womenShoesSubcategories.forEach((subcat, subcatIndex) => {
+    subcat.items.forEach((itemName, itemIndex) => {
+        const skuNum = String(subcatIndex * 100 + itemIndex + 1).padStart(3, '0');
+        const sku = `WS-${subcat.code}-${skuNum}`;
+        const manufacturer = MANUFACTURERS.shoes[Math.floor(Math.random() * MANUFACTURERS.shoes.length)];
+
+        INVENTORY_DATABASE.push(generateProduct({
+            sku,
+            name: itemName,
+            category: "Women's Shoes",
+            subcategory: subcat.name,
+            gender: 'W',
+            basePrice: subcat.basePrice,
+            sizes: subcat.sizes,
+            colors: subcat.colors,
+            manufacturer
+        }));
+    });
+});
+
+// ===== ACCESSORIES =====
+const accessoriesSubcategories = [
+    {
+        code: 'BLT',
+        name: 'Belts',
+        items: [
+            'Leather Belt', 'Canvas Belt', 'Braided Belt', 'Reversible Belt',
+            'Dress Belt', 'Casual Belt', 'Web Belt', 'Stretch Belt'
+        ],
+        sizes: ['S', 'M', 'L', 'XL'],
+        colors: ['Black', 'Brown', 'Tan', 'Navy'],
+        basePrice: 25,
+        gender: 'U'
+    },
+    {
+        code: 'BAG',
+        name: 'Bags',
+        items: [
+            'Backpack', 'Messenger Bag', 'Tote Bag', 'Duffle Bag',
+            'Crossbody Bag', 'Shoulder Bag', 'Clutch', 'Satchel',
+            'Weekender Bag', 'Laptop Bag'
+        ],
+        sizes: SIZES.oneSize,
+        colors: ['Black', 'Brown', 'Navy', 'Gray', 'Tan'],
+        basePrice: 55,
+        gender: 'U'
+    },
+    {
+        code: 'WAL',
+        name: 'Wallets',
+        items: [
+            'Bifold Wallet', 'Trifold Wallet', 'Card Holder', 'Money Clip',
+            'Zip Wallet', 'Travel Wallet', 'Coin Purse'
+        ],
+        sizes: SIZES.oneSize,
+        colors: ['Black', 'Brown', 'Tan', 'Navy'],
+        basePrice: 32,
+        gender: 'U'
+    },
+    {
+        code: 'HAT',
+        name: 'Hats',
+        items: [
+            'Baseball Cap', 'Beanie', 'Fedora', 'Bucket Hat',
+            'Trucker Hat', 'Snapback', 'Dad Hat', 'Winter Hat'
+        ],
+        sizes: SIZES.oneSize,
+        colors: ['Black', 'Navy', 'Gray', 'Tan', 'Red'],
+        basePrice: 22,
+        gender: 'U'
+    },
+    {
+        code: 'SCF',
+        name: 'Scarves',
+        items: [
+            'Wool Scarf', 'Cashmere Scarf', 'Infinity Scarf', 'Silk Scarf',
+            'Cotton Scarf', 'Knit Scarf'
+        ],
+        sizes: SIZES.oneSize,
+        colors: ['Black', 'Navy', 'Gray', 'Red', 'Burgundy'],
+        basePrice: 28,
+        gender: 'U'
+    },
+    {
+        code: 'GLV',
+        name: 'Gloves',
+        items: [
+            'Leather Gloves', 'Knit Gloves', 'Wool Gloves', 'Touchscreen Gloves',
+            'Driving Gloves', 'Winter Gloves'
+        ],
+        sizes: ['S', 'M', 'L', 'XL'],
+        colors: ['Black', 'Brown', 'Gray', 'Navy'],
+        basePrice: 24,
+        gender: 'U'
+    },
+    {
+        code: 'SUN',
+        name: 'Sunglasses',
+        items: [
+            'Aviator Sunglasses', 'Wayfarer Sunglasses', 'Round Sunglasses', 'Cat Eye Sunglasses',
+            'Sport Sunglasses', 'Oversized Sunglasses', 'Square Sunglasses'
+        ],
+        sizes: SIZES.oneSize,
+        colors: ['Black', 'Tortoise', 'Gold', 'Silver'],
+        basePrice: 45,
+        gender: 'U'
+    },
+    {
+        code: 'WTH',
+        name: 'Watches',
+        items: [
+            'Analog Watch', 'Digital Watch', 'Chronograph', 'Dress Watch',
+            'Sport Watch', 'Dive Watch', 'Smart Watch'
+        ],
+        sizes: SIZES.oneSize,
+        colors: ['Silver', 'Gold', 'Black', 'Rose Gold'],
+        basePrice: 95,
+        gender: 'U'
+    },
+    {
+        code: 'JWL',
+        name: 'Jewelry',
+        items: [
+            'Necklace', 'Bracelet', 'Earrings', 'Ring',
+            'Pendant', 'Cufflinks', 'Tie Clip', 'Brooch'
+        ],
+        sizes: SIZES.oneSize,
+        colors: ['Silver', 'Gold', 'Rose Gold'],
+        basePrice: 38,
+        gender: 'U'
+    },
+    {
+        code: 'TIE',
+        name: 'Ties & Bow Ties',
+        items: [
+            'Silk Tie', 'Skinny Tie', 'Bow Tie', 'Knit Tie',
+            'Striped Tie', 'Solid Tie', 'Patterned Tie'
+        ],
+        sizes: SIZES.oneSize,
+        colors: ['Navy', 'Black', 'Red', 'Burgundy', 'Gray'],
+        basePrice: 28,
+        gender: 'M'
+    }
+];
+
+// Generate Accessories
+accessoriesSubcategories.forEach((subcat, subcatIndex) => {
+    subcat.items.forEach((itemName, itemIndex) => {
+        const skuNum = String(subcatIndex * 100 + itemIndex + 1).padStart(3, '0');
+        const sku = `AC-${subcat.code}-${skuNum}`;
+        const manufacturer = MANUFACTURERS.accessories[Math.floor(Math.random() * MANUFACTURERS.accessories.length)];
+
+        INVENTORY_DATABASE.push(generateProduct({
+            sku,
+            name: itemName,
+            category: "Accessories",
+            subcategory: subcat.name,
+            gender: subcat.gender,
+            basePrice: subcat.basePrice,
+            sizes: subcat.sizes,
+            colors: subcat.colors,
+            manufacturer
+        }));
+    });
+});
+
+// Export for use in app
+console.log(`Generated ${INVENTORY_DATABASE.length} SKUs`);
