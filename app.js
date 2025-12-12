@@ -270,6 +270,73 @@ function initializeApp() {
     setupEventListeners();
 }
 
+function updateGenderFilter() {
+    const genderSelect = document.getElementById('filter-gender');
+
+    // Get available genders from current filtered data (excluding gender filter itself)
+    let dataToCheck = [...INVENTORY_DATABASE];
+
+    // Apply current filters except gender
+    if (App.filters.search) {
+        const search = App.filters.search.toLowerCase();
+        dataToCheck = dataToCheck.filter(item =>
+            item.sku.toLowerCase().includes(search) ||
+            item.name.toLowerCase().includes(search) ||
+            item.category.toLowerCase().includes(search) ||
+            item.subcategory.toLowerCase().includes(search) ||
+            item.manufacturer.toLowerCase().includes(search) ||
+            item.colors.toLowerCase().includes(search)
+        );
+    }
+
+    if (App.filters.category) {
+        dataToCheck = dataToCheck.filter(item => item.category === App.filters.category);
+    }
+
+    if (App.filters.subcategory) {
+        dataToCheck = dataToCheck.filter(item => item.subcategory === App.filters.subcategory);
+    }
+
+    if (App.filters.stock) {
+        if (App.filters.stock === 'in-stock') {
+            dataToCheck = dataToCheck.filter(item => item.available > 20);
+        } else if (App.filters.stock === 'low') {
+            dataToCheck = dataToCheck.filter(item => item.available > 0 && item.available <= 20);
+        } else if (App.filters.stock === 'out') {
+            dataToCheck = dataToCheck.filter(item => item.available === 0);
+        }
+    }
+
+    // Count items per gender
+    const genderCounts = {
+        'M': dataToCheck.filter(item => item.gender === 'M').length,
+        'W': dataToCheck.filter(item => item.gender === 'W').length,
+        'U': dataToCheck.filter(item => item.gender === 'U').length
+    };
+
+    // Update options
+    const options = genderSelect.querySelectorAll('option');
+    options.forEach(option => {
+        const value = option.value;
+        if (value === '') {
+            // "All Genders" option
+            option.disabled = false;
+            option.classList.remove('disabled-option');
+        } else {
+            const count = genderCounts[value] || 0;
+            if (count === 0) {
+                option.disabled = true;
+                option.classList.add('disabled-option');
+                option.textContent = option.textContent.split(' (')[0] + ' (0)';
+            } else {
+                option.disabled = false;
+                option.classList.remove('disabled-option');
+                option.textContent = option.textContent.split(' (')[0] + ` (${count})`;
+            }
+        }
+    });
+}
+
 function populateFilterDropdowns() {
     const categories = [...new Set(INVENTORY_DATABASE.map(item => item.category))].sort();
     const categorySelect = document.getElementById('filter-category');
@@ -280,6 +347,9 @@ function populateFilterDropdowns() {
         option.textContent = cat;
         categorySelect.appendChild(option);
     });
+
+    // Initialize gender filter
+    updateGenderFilter();
 }
 
 function updateSubcategoryFilter() {
@@ -350,6 +420,7 @@ function applyFilters() {
 
     App.filteredData = data;
     App.currentPage = 1; // Reset to first page
+    updateGenderFilter(); // Update gender options based on filtered data
     updateDisplay();
 }
 

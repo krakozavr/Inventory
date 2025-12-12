@@ -269,22 +269,30 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 1rem;
+    padding: 1rem 1.5rem;
     background: var(--bg-light);
-    border-bottom: 2px solid var(--accent-color);
+    border-bottom: 3px solid var(--accent-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
 }
 
 .header-left h1 {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     color: var(--accent-color);
-    letter-spacing: 2px;
+    letter-spacing: 2.5px;
+    line-height: 1;
 }
 
 .header-subtitle {
     font-size: 10px;
     color: var(--text-dim);
-    margin-left: 1rem;
+    letter-spacing: 0.5px;
 }
 
 .header-right {
@@ -384,6 +392,11 @@ body {
 .filter-select:focus {
     outline: none;
     border-color: var(--accent-color);
+}
+
+.filter-select option.disabled-option {
+    color: var(--text-dim);
+    opacity: 0.5;
 }
 
 .reset-btn {
