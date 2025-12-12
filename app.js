@@ -45,51 +45,67 @@ function saveSettings() {
 }
 
 // ===== INITIALIZATION SCREEN =====
-let bgColorPicker, textColorPicker, accentColorPicker;
+let sharedColorPicker;
+let activeSwatchRole = 'bg'; // Default active swatch
+
+const swatchColors = {
+    bg: '#0a0e14',
+    text: '#c7cdd8',
+    accent: '#39bae6'
+};
 
 function initializeSetup() {
     const storeNameInput = document.getElementById('store-name');
     const submitBtn = document.getElementById('init-submit');
+    const swatches = document.querySelectorAll('.color-swatch');
 
     // Load saved settings
     const savedSettings = loadSettings();
-    const defaultBg = savedSettings?.theme?.bg || '#0a0e14';
-    const defaultText = savedSettings?.theme?.text || '#c7cdd8';
-    const defaultAccent = savedSettings?.theme?.accent || '#39bae6';
-
     if (savedSettings?.storeName) {
         storeNameInput.value = savedSettings.storeName;
     }
+    if (savedSettings?.theme) {
+        swatchColors.bg = savedSettings.theme.bg || '#0a0e14';
+        swatchColors.text = savedSettings.theme.text || '#c7cdd8';
+        swatchColors.accent = savedSettings.theme.accent || '#39bae6';
 
-    // Initialize ColorPickers
-    bgColorPicker = new ColorPicker(document.getElementById('bg-color-picker'), {
-        initialColor: defaultBg,
+        // Update swatch visuals
+        document.querySelector('[data-role="bg"] .swatch-color').style.backgroundColor = swatchColors.bg;
+        document.querySelector('[data-role="text"] .swatch-color').style.backgroundColor = swatchColors.text;
+        document.querySelector('[data-role="accent"] .swatch-color').style.backgroundColor = swatchColors.accent;
+    }
+
+    // Initialize ONE shared ColorPicker
+    sharedColorPicker = new ColorPicker(document.getElementById('shared-color-picker'), {
+        initialColor: swatchColors[activeSwatchRole],
         showHexDisplay: true,
         onChange: (hex) => {
-            App.theme.bg = hex;
+            // Update the active swatch
+            swatchColors[activeSwatchRole] = hex;
+            const activeSwatch = document.querySelector(`.color-swatch[data-role="${activeSwatchRole}"]`);
+            activeSwatch.querySelector('.swatch-color').style.backgroundColor = hex;
         }
     });
 
-    textColorPicker = new ColorPicker(document.getElementById('text-color-picker'), {
-        initialColor: defaultText,
-        showHexDisplay: true,
-        onChange: (hex) => {
-            App.theme.text = hex;
-        }
-    });
+    // Swatch click handlers
+    swatches.forEach(swatch => {
+        swatch.addEventListener('click', () => {
+            // Update active state
+            swatches.forEach(s => s.classList.remove('active'));
+            swatch.classList.add('active');
 
-    accentColorPicker = new ColorPicker(document.getElementById('accent-color-picker'), {
-        initialColor: defaultAccent,
-        showHexDisplay: true,
-        onChange: (hex) => {
-            App.theme.accent = hex;
-        }
+            // Update active role
+            activeSwatchRole = swatch.dataset.role;
+
+            // Update color picker to show this swatch's color
+            sharedColorPicker.setValue(swatchColors[activeSwatchRole]);
+        });
     });
 
     // Set initial theme values
-    App.theme.bg = bgColorPicker.getValue();
-    App.theme.text = textColorPicker.getValue();
-    App.theme.accent = accentColorPicker.getValue();
+    App.theme.bg = swatchColors.bg;
+    App.theme.text = swatchColors.text;
+    App.theme.accent = swatchColors.accent;
 
     submitBtn.addEventListener('click', () => {
         const storeName = storeNameInput.value.trim();
@@ -101,9 +117,9 @@ function initializeSetup() {
         }
 
         App.storeName = storeName;
-        App.theme.bg = bgColorPicker.getValue();
-        App.theme.text = textColorPicker.getValue();
-        App.theme.accent = accentColorPicker.getValue();
+        App.theme.bg = swatchColors.bg;
+        App.theme.text = swatchColors.text;
+        App.theme.accent = swatchColors.accent;
 
         saveSettings();
         startLoadingSequence();

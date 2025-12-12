@@ -24,22 +24,24 @@
                 </div>
 
                 <div class="color-section">
-                    <h3>TERMINAL COLOR SCHEME</h3>
+                    <h3>SYSTEM PALETTE</h3>
 
-                    <div class="color-picker-wrapper">
-                        <label>Background Color:</label>
-                        <div id="bg-color-picker"></div>
+                    <div class="color-swatches">
+                        <div class="color-swatch active" data-role="bg">
+                            <div class="swatch-color" style="background-color: #0a0e14;"></div>
+                            <span class="swatch-label">BACKGROUND</span>
+                        </div>
+                        <div class="color-swatch" data-role="text">
+                            <div class="swatch-color" style="background-color: #c7cdd8;"></div>
+                            <span class="swatch-label">TEXT</span>
+                        </div>
+                        <div class="color-swatch" data-role="accent">
+                            <div class="swatch-color" style="background-color: #39bae6;"></div>
+                            <span class="swatch-label">ACCENT</span>
+                        </div>
                     </div>
 
-                    <div class="color-picker-wrapper">
-                        <label>Text Color:</label>
-                        <div id="text-color-picker"></div>
-                    </div>
-
-                    <div class="color-picker-wrapper">
-                        <label>Accent Color:</label>
-                        <div id="accent-color-picker"></div>
-                    </div>
+                    <div id="shared-color-picker"></div>
                 </div>
 
                 <button id="init-submit" class="submit-btn">INITIALIZE SYSTEM</button>
