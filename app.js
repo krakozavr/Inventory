@@ -184,28 +184,80 @@ function startLoadingSequence() {
 }
 
 // ===== THEME APPLICATION =====
+function getLuminance(hex) {
+    const rgb = parseInt(hex.replace('#', ''), 16);
+    const r = (rgb >> 16) / 255;
+    const g = ((rgb >> 8) & 0xFF) / 255;
+    const b = (rgb & 0xFF) / 255;
+
+    // Calculate relative luminance
+    const [rs, gs, bs] = [r, g, b].map(c => {
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    });
+
+    return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+}
+
+function adjustColorByPercent(hex, percent) {
+    const rgb = parseInt(hex.replace('#', ''), 16);
+    const r = (rgb >> 16) & 0xFF;
+    const g = (rgb >> 8) & 0xFF;
+    const b = rgb & 0xFF;
+
+    const adjust = (c) => {
+        if (percent > 0) {
+            // Lighten
+            return Math.round(c + (255 - c) * (percent / 100));
+        } else {
+            // Darken
+            return Math.round(c * (1 + percent / 100));
+        }
+    };
+
+    const newR = Math.min(255, Math.max(0, adjust(r)));
+    const newG = Math.min(255, Math.max(0, adjust(g)));
+    const newB = Math.min(255, Math.max(0, adjust(b)));
+
+    return '#' + ((newR << 16) | (newG << 8) | newB).toString(16).padStart(6, '0');
+}
+
 function applyTheme() {
     const root = document.documentElement;
     root.style.setProperty('--bg-color', App.theme.bg);
     root.style.setProperty('--text-color', App.theme.text);
     root.style.setProperty('--accent-color', App.theme.accent);
 
-    // Generate lighter/darker variants
-    const bgLighter = adjustColor(App.theme.bg, 20);
-    const bgLightest = adjustColor(App.theme.bg, 40);
-    const textDim = adjustColor(App.theme.text, -30);
+    // Detect if background is light or dark
+    const bgLuminance = getLuminance(App.theme.bg);
+    const isLightBackground = bgLuminance > 0.15; // 15% threshold
 
-    root.style.setProperty('--bg-light', bgLighter);
-    root.style.setProperty('--bg-lighter', bgLightest);
+    // Generate variants based on background brightness
+    let bgLight, bgLighter, tableStripe;
+
+    if (isLightBackground) {
+        // Light background - make variants darker
+        bgLight = adjustColorByPercent(App.theme.bg, -5);
+        bgLighter = adjustColorByPercent(App.theme.bg, -10);
+        tableStripe = adjustColorByPercent(App.theme.bg, -10);
+    } else {
+        // Dark background - make variants lighter
+        bgLight = adjustColorByPercent(App.theme.bg, 10);
+        bgLighter = adjustColorByPercent(App.theme.bg, 20);
+        tableStripe = adjustColorByPercent(App.theme.bg, 5);
+    }
+
+    // Adjust text dimness
+    const textLuminance = getLuminance(App.theme.text);
+    const textDim = adjustColorByPercent(App.theme.text, textLuminance > 0.5 ? -30 : 30);
+
+    // Adjust border color based on background
+    const borderColor = adjustColorByPercent(App.theme.bg, isLightBackground ? -20 : 30);
+
+    root.style.setProperty('--bg-light', bgLight);
+    root.style.setProperty('--bg-lighter', bgLighter);
     root.style.setProperty('--text-dim', textDim);
-}
-
-function adjustColor(hex, percent) {
-    const num = parseInt(hex.replace('#', ''), 16);
-    const r = Math.min(255, Math.max(0, (num >> 16) + percent));
-    const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + percent));
-    const b = Math.min(255, Math.max(0, (num & 0x0000FF) + percent));
-    return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+    root.style.setProperty('--table-stripe', tableStripe);
+    root.style.setProperty('--border-color', borderColor);
 }
 
 // ===== MAIN APPLICATION =====
