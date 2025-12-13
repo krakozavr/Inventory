@@ -47,6 +47,8 @@ body {
     align-items: center;
     justify-content: center;
     background-color: var(--bg-color);
+    overflow-y: auto;
+    padding: 1rem 0;
 }
 
 .init-container {
@@ -55,6 +57,7 @@ body {
     border: 2px solid var(--border-color);
     background: var(--bg-light);
     padding: 2rem;
+    margin: auto;
 }
 
 .init-header {

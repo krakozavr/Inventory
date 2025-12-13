@@ -110,12 +110,12 @@ class ColorPicker {
     this.elements.area.addEventListener('touchstart', (e) => {
       e.preventDefault();
       this.handleAreaInteraction(e);
-    });
+    }, { passive: false });
 
     this.elements.area.addEventListener('touchmove', (e) => {
       e.preventDefault();
       this.handleAreaInteraction(e);
-    });
+    }, { passive: false });
 
     // Hue slider
     this.elements.hueInput.addEventListener('input', (e) => {
