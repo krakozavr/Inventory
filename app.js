@@ -3,6 +3,7 @@
 // ===== APPLICATION STATE =====
 const App = {
     storeName: '',
+    baseFontSize: 13,
     theme: {
         bg: '#0a0e14',
         text: '#c7cdd8',
@@ -19,7 +20,8 @@ const App = {
         subcategory: '',
         gender: '',
         stock: ''
-    }
+    },
+    activeRow: null
 };
 
 // ===== LOCAL STORAGE =====
@@ -39,6 +41,7 @@ function loadSettings() {
 function saveSettings() {
     const settings = {
         storeName: App.storeName,
+        baseFontSize: App.baseFontSize,
         theme: App.theme
     };
     localStorage.setItem('inventorySettings', JSON.stringify(settings));
@@ -56,6 +59,7 @@ const swatchColors = {
 
 function initializeSetup() {
     const storeNameInput = document.getElementById('store-name');
+    const baseFontSizeInput = document.getElementById('base-font-size');
     const submitBtn = document.getElementById('init-submit');
     const swatches = document.querySelectorAll('.color-swatch');
 
@@ -63,6 +67,9 @@ function initializeSetup() {
     const savedSettings = loadSettings();
     if (savedSettings?.storeName) {
         storeNameInput.value = savedSettings.storeName;
+    }
+    if (savedSettings?.baseFontSize) {
+        baseFontSizeInput.value = savedSettings.baseFontSize;
     }
     if (savedSettings?.theme) {
         swatchColors.bg = savedSettings.theme.bg || '#0a0e14';
@@ -109,6 +116,7 @@ function initializeSetup() {
 
     submitBtn.addEventListener('click', () => {
         const storeName = storeNameInput.value.trim();
+        const baseFontSize = parseInt(baseFontSizeInput.value);
 
         if (!storeName) {
             alert('Please enter a store name');
@@ -116,7 +124,14 @@ function initializeSetup() {
             return;
         }
 
+        if (!baseFontSize || baseFontSize < 10 || baseFontSize > 20) {
+            alert('Please enter a valid font size (10-20px)');
+            baseFontSizeInput.focus();
+            return;
+        }
+
         App.storeName = storeName;
+        App.baseFontSize = baseFontSize;
         App.theme.bg = swatchColors.bg;
         App.theme.text = swatchColors.text;
         App.theme.accent = swatchColors.accent;
@@ -223,13 +238,26 @@ function adjustColorByPercent(hex, percent) {
 
 function applyTheme() {
     const root = document.documentElement;
+
+    // Apply base font size
+    root.style.setProperty('--base-font-size', App.baseFontSize + 'px');
+
     root.style.setProperty('--bg-color', App.theme.bg);
     root.style.setProperty('--text-color', App.theme.text);
     root.style.setProperty('--accent-color', App.theme.accent);
 
     // Detect if background is light or dark
     const bgLuminance = getLuminance(App.theme.bg);
+    const accentLuminance = getLuminance(App.theme.accent);
     const isLightBackground = bgLuminance > 0.15; // 15% threshold
+
+    // Dark scheme detection: both accent and background are dark (darker than 50%)
+    const isDarkScheme = bgLuminance < 0.5 && accentLuminance < 0.5;
+
+    // Smart text color for header and active rows
+    const headerTextColor = isDarkScheme ? '#ffffff' : App.theme.bg;
+    root.style.setProperty('--header-text-color', headerTextColor);
+    root.style.setProperty('--active-row-text-color', headerTextColor);
 
     // Generate variants based on background brightness
     let bgLight, bgLighter, tableStripe;
@@ -498,6 +526,11 @@ function renderTable() {
         const row = document.createElement('tr');
         row.dataset.sku = item.sku;
 
+        // Mark active row
+        if (App.activeRow === item.sku) {
+            row.classList.add('active-row');
+        }
+
         // Determine stock status classes
         let availClass = 'numeric';
         if (item.available === 0) {
@@ -519,7 +552,16 @@ function renderTable() {
             <td class="numeric">$${item.retail.toFixed(2)}</td>
         `;
 
-        row.addEventListener('click', () => showDetailPanel(item));
+        row.addEventListener('click', () => {
+            // Update active row state
+            App.activeRow = item.sku;
+            // Remove active class from all rows
+            document.querySelectorAll('.data-table tbody tr').forEach(r => r.classList.remove('active-row'));
+            // Add active class to clicked row
+            row.classList.add('active-row');
+            // Show detail panel
+            showDetailPanel(item);
+        });
         tbody.appendChild(row);
     });
 }

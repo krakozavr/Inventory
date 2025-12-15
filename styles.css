@@ -1,6 +1,7 @@
 /* Terminal-Style Business Inventory System */
 
 :root {
+    --base-font-size: 13px;
     --bg-color: #0a0e14;
     --bg-light: #1a1e24;
     --bg-lighter: #2a2e34;
@@ -13,6 +14,8 @@
     --warning-color: #ff9800;
     --danger-color: #f44336;
     --table-stripe: #151921;
+    --header-text-color: #0a0e14;
+    --active-row-text-color: #0a0e14;
 }
 
 * {
@@ -25,7 +28,7 @@ body {
     font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
     background-color: var(--bg-color);
     color: var(--text-color);
-    font-size: 13px;
+    font-size: var(--base-font-size);
     line-height: 1.4;
     overflow: hidden;
 }
@@ -104,7 +107,8 @@ body {
     letter-spacing: 1px;
 }
 
-.form-field input[type="text"] {
+.form-field input[type="text"],
+.form-field input[type="number"] {
     width: 100%;
     padding: clamp(0.5rem, 1vh, 0.75rem);
     background: var(--bg-color);
@@ -114,7 +118,8 @@ body {
     font-size: clamp(12px, 2vh, 14px);
 }
 
-.form-field input[type="text"]:focus {
+.form-field input[type="text"]:focus,
+.form-field input[type="number"]:focus {
     outline: none;
     border-color: var(--accent-color);
 }
@@ -293,8 +298,8 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 1rem 1.5rem;
-    background: var(--bg-light);
-    border-bottom: 3px solid var(--accent-color);
+    background: var(--accent-color);
+    border-bottom: 3px solid var(--border-color);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -305,16 +310,17 @@ body {
 }
 
 .header-left h1 {
-    font-size: 18px;
+    font-size: calc(var(--base-font-size) + 5px);
     font-weight: bold;
-    color: var(--accent-color);
+    color: var(--header-text-color);
     letter-spacing: 2.5px;
     line-height: 1;
 }
 
 .header-subtitle {
-    font-size: 10px;
-    color: var(--text-dim);
+    font-size: calc(var(--base-font-size) - 3px);
+    color: var(--header-text-color);
+    opacity: 0.7;
     letter-spacing: 0.5px;
 }
 
@@ -325,27 +331,29 @@ body {
 }
 
 .header-stat {
-    font-size: 11px;
-    color: var(--text-dim);
+    font-size: calc(var(--base-font-size) - 2px);
+    color: var(--header-text-color);
+    opacity: 0.8;
 }
 
 .header-stat strong {
-    color: var(--accent-color);
-    font-size: 13px;
+    color: var(--header-text-color);
+    font-size: var(--base-font-size);
 }
 
 .view-toggle-btn {
     padding: 0.4rem 0.8rem;
-    background: var(--bg-color);
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
+    background: var(--header-text-color);
+    border: 1px solid var(--header-text-color);
+    color: var(--accent-color);
     font-family: inherit;
-    font-size: 10px;
+    font-size: calc(var(--base-font-size) - 3px);
     cursor: pointer;
+    font-weight: bold;
 }
 
 .view-toggle-btn:hover {
-    border-color: var(--accent-color);
+    opacity: 0.8;
 }
 
 /* Control Bar */
@@ -372,7 +380,7 @@ body {
     border: 1px solid var(--border-color);
     color: var(--text-color);
     font-family: inherit;
-    font-size: 12px;
+    font-size: calc(var(--base-font-size) - 1px);
 }
 
 #search-input:focus {
@@ -409,7 +417,7 @@ body {
     border: 1px solid var(--border-color);
     color: var(--text-color);
     font-family: inherit;
-    font-size: 11px;
+    font-size: calc(var(--base-font-size) - 2px);
 }
 
 .filter-select:focus {
@@ -428,7 +436,7 @@ body {
     border: 1px solid var(--border-color);
     color: var(--text-dim);
     font-family: inherit;
-    font-size: 11px;
+    font-size: calc(var(--base-font-size) - 2px);
     cursor: pointer;
 }
 
@@ -445,7 +453,7 @@ body {
     padding: 0.5rem 1rem;
     background: var(--bg-light);
     border-bottom: 1px solid var(--border-color);
-    font-size: 11px;
+    font-size: calc(var(--base-font-size) - 2px);
 }
 
 .pagination-controls {
@@ -460,7 +468,7 @@ body {
     border: 1px solid var(--border-color);
     color: var(--text-color);
     font-family: inherit;
-    font-size: 11px;
+    font-size: calc(var(--base-font-size) - 2px);
     cursor: pointer;
 }
 
@@ -480,7 +488,7 @@ body {
     border: 1px solid var(--border-color);
     color: var(--text-color);
     font-family: inherit;
-    font-size: 11px;
+    font-size: calc(var(--base-font-size) - 2px);
     text-align: center;
 }
 
@@ -490,7 +498,7 @@ body {
     border: 1px solid var(--border-color);
     color: var(--text-color);
     font-family: inherit;
-    font-size: 11px;
+    font-size: calc(var(--base-font-size) - 2px);
 }
 
 /* Data Table */
@@ -503,7 +511,7 @@ body {
 .data-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 14px;
+    font-size: calc(var(--base-font-size) + 1px);
 }
 
 .data-table thead {
@@ -520,7 +528,7 @@ body {
     color: var(--text-dim);
     border-bottom: 2px solid var(--accent-color);
     border-right: 1px solid var(--border-color);
-    font-size: 10px;
+    font-size: calc(var(--base-font-size) - 3px);
     letter-spacing: 1px;
     white-space: nowrap;
 }
@@ -566,6 +574,19 @@ body {
 
 .data-table tbody tr:hover {
     background: var(--bg-lighter);
+}
+
+.data-table tbody tr.active-row {
+    background: var(--accent-color) !important;
+}
+
+.data-table tbody tr.active-row td {
+    color: var(--active-row-text-color) !important;
+    font-weight: bold;
+}
+
+.data-table tbody tr.active-row td.sku {
+    color: var(--active-row-text-color) !important;
 }
 
 .data-table td {
@@ -661,7 +682,7 @@ body {
 }
 
 .detail-section h3 {
-    font-size: 11px;
+    font-size: calc(var(--base-font-size) - 2px);
     font-weight: bold;
     color: var(--text-dim);
     margin-bottom: 0.75rem;
@@ -672,7 +693,7 @@ body {
     display: grid;
     grid-template-columns: 120px 1fr;
     gap: 0.5rem;
-    font-size: 12px;
+    font-size: calc(var(--base-font-size) - 1px);
 }
 
 .detail-label {
